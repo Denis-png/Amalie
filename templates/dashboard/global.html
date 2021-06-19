@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+{% load plotly_dash %}
+{% load bootstrap4 %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% include 'parts/sidebar.html' %}
+        <div class="col">
+            {% block dashboard-content %}
+                <h1> This is a dashboard page</h1>
+            {% endblock %}
+        </div>
+    </div>
+
+{% endblock %}

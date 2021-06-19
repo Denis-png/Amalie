@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Select options{% endblock %}
+{% block content %}
+            <h1>Select feature and time period</h1>
+        <form action="." method="POST">
+            {% csrf_token %}
+            {{ select }}
+
+            <button type="submit" class="btn btn-primary">Get tables</button>
+        </form>
+    {% if request.POST %}
+        {% include 'query/display_page.html' with data=data save=save title=title dash=dash %}
+    {% endif %}
+
+{% endblock %}
+

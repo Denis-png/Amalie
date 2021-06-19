@@ -1,0 +1,22 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 230px;">
+    <a href="{% url 'dashboard' %}" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+      <span class="fs-5 fw-semibold">Dashboard</span>
+    </a>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="{% url 'sensors_dashboard' %}" class="nav-link">
+              Sensors
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'data_dashboard' %}" class="nav-link">
+            Data quality
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'history_dashboard' %}" class="nav-link">
+            History
+          </a>
+        </li>
+    </ul>
+</div>
