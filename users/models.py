@@ -27,6 +27,9 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    is_technician = models.BooleanField(default=False)
+    is_scientist = models.BooleanField(default=False)
+
     objects = CustomUserManager()
 
     def __str__(self):
@@ -34,3 +37,5 @@ class CustomUser(AbstractUser):
 
     def has_perm(self, obj=None):
         return self.is_admin
+
+

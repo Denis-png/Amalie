@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'channels',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'dpd_static_support',
     'dashboard.apps.DashboardConfig',
     'query.apps.QueryConfig',
     'users.apps.UsersConfig',
@@ -179,6 +180,10 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
+LOGIN_URL = '/auth/login/'
+
+LOGIN_REDIRECT_URL = '/auth/login/'
+
 LOGOUT_REDIRECT_URL = '/home/'
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -197,7 +202,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    #'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
     'django.contrib.auth.hashers.Argon2PasswordHasher',
@@ -236,6 +241,8 @@ STATICFILES_FINDERS = [
     'django_plotly_dash.finders.DashComponentFinder',
     'django_plotly_dash.finders.DashAppDirectoryFinder',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 if DEBUG:
     MIDDLEWARE = [

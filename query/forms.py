@@ -23,11 +23,11 @@ formats = [
 
 class SelectFeature(forms.Form):
     feature = forms.CharField(label='Feature', widget=forms.Select(attrs={'class': 'form-select'}, choices=FEATURES), required=True)
-    date_from = forms.DateField(widget=forms.SelectDateWidget())
-    date_to = forms.DateField(widget= forms.SelectDateWidget())
+    date_from = forms.DateField(widget=forms.SelectDateWidget(attrs={'class': 'form-select form-select-sm'}))
+    date_to = forms.DateField(widget= forms.SelectDateWidget(attrs={'class': 'form-select form-select-sm'}))
 
 
 class Save(forms.Form):
-    format = forms.CharField(label='Format', widget=forms.Select(choices=formats), required=False)
+    format = forms.CharField(label='Format', widget=forms.Select(attrs={'class': 'form-select form-select-sm w-25 ml-3'}, choices=formats), required=False)
 
 

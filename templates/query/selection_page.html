@@ -1,16 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Select options{% endblock %}
-{% block content %}
-            <h1>Select feature and time period</h1>
-        <form action="." method="POST">
-            {% csrf_token %}
-            {{ select }}
 
-            <button type="submit" class="btn btn-primary">Get tables</button>
-        </form>
-    {% if request.POST %}
-        {% include 'query/display_page.html' with data=data save=save title=title dash=dash %}
-    {% endif %}
+{% load static %}
+
+{% block title %}Select options{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'partitials/css/buttons.css'%}">
+    <link rel="stylesheet" href="{% static 'partitials/css/labels.css'%}">
+    <link rel="stylesheet" href="{% static 'partitials/css/tabs.css'%}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+      <div class="row mt-3">
+        <div class="col">
+        </div>
+        <div class="col">
+            <h3 class="text-center" style="color: #7dbbb9;">Select feature and time period</h3>
+            <form action="." method="POST" >
+                {% csrf_token %}
+                {{ select.as_p }}
+
+                <button type="submit" class="btn custom-button">Get tables</button>
+            </form>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+        <div class="row mt-5">
+            {% if request.POST %}
+                {% include 'query/display_page.html' with data=data save=save title=title dash=dash %}
+            {% endif %}
+        </div>
+    </div>
 
 {% endblock %}
 

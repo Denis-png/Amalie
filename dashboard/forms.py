@@ -14,12 +14,11 @@ ID = [
 
 
 class SelectSensor(forms.Form):
-    sensor_group = forms.CharField(label='Sensor Group', widget=forms.Select(choices=SENSOR_GROUPS))
-    sensor_id = forms.CharField(label='Sensor ID', widget=forms.Select(choices=ID))
+    sensor_group = forms.CharField(label='Sensor Group', widget=forms.Select(attrs={'class': 'form-select form-select-sm'}, choices=SENSOR_GROUPS))
+    sensor_id = forms.CharField(label='Sensor ID', widget=forms.Select(attrs={'class': 'form-select form-select-sm'}, choices=ID))
 
 
-class CalibrationDate(forms.Form):
-    date = forms.DateField(widget=forms.SelectDateWidget)
-    time = forms.DateField(widget=forms.DateInput(attrs={'class':'datepicker'}))
+class AddAction(forms.Form):
+    action = forms.CharField(label='', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control mb-3'}))
 
 

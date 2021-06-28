@@ -16,3 +16,8 @@ class Sensors(models.Model):
 
     def __str__(self):
         return self.sensor_name
+
+
+class MaintenanceActions(models.Model):
+    label = models.CharField(max_length=255, null=False)
+    value = models.CharField(max_length=255, null=False)

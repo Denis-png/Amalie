@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 
 
-{% load static %}
-{% load plotly_dash %}
-{% load bootstrap4 %}
 
 {% block title %}
     Dashboard
@@ -14,7 +11,7 @@
         {% include 'parts/sidebar.html' %}
         <div class="col">
             {% block dashboard-content %}
-                <h1> This is a dashboard page</h1>
+                <h1 class="text-center mt-5" style="color: #7dbbb9;">Dashboard</h1>
             {% endblock %}
         </div>
     </div>

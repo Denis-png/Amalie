@@ -1,5 +1,5 @@
-<form method="post" action="/query/save/">
+<form method="post" action="/query/save/" class="m-4 d-flex">
     {% csrf_token %}
-    {{ save.as_p }}
-    <button type="submit" class="btn-primary"> Export... </button>
+    {{ save }}
+    <button type="submit" class="btn custom-button-static ml-3"> Export... </button>
 </form>

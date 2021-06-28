@@ -1,5 +1,8 @@
 {% extends 'dashboard/global.html' %}
 
+{% load static %}
+{% load plotly_dash %}
+{% load bootstrap4 %}
 
 {% block dashboard-content %}
     <div class="container">
@@ -8,12 +11,12 @@
             {% csrf_token %}
             {{ select_sensor }}
 
-            <button type="submit" class="btn btn-primary">SELECT</button>
+            <button type="submit" class="btn custom-button-static" name="select_sensor">SELECT</button>
         </form>
     </div>
     {% if data %}
         {% for row in data %}
-            <h1>{{ row.sensor_name }}</h1>
+            <h1 class="text-center mt-5" style="color: #2a5d68;">{{ row.sensor_name }}</h1>
         {% endfor %}
         <div class="row">
             <table class="table table-hover">
@@ -50,9 +53,19 @@
                         {% endfor %}
                     </tbody>
             </table>
-            {{ calibration }}
+            <p class="pl-0 mt-2" style="color: #2a5d68; font-weight: bold"> Update last calibration date</p>
+            {% plotly_app name='Calibration_form' ratio=0.4 %}
+        </div>
+        <div class="row mt-0">
+            <p class="text-center mt-5" style="color: #2a5d68; font-weight: bold">Maintenance form</p>
+            <div class="col">
+                {% plotly_app name='Maintenance_form' ratio=0.5 %}
+            </div>
         </div>
     {% endif %}
     </div>
 
+
+
 {% endblock %}
+

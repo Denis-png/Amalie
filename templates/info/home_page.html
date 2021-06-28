@@ -2,8 +2,63 @@
 
 {% block title %}Home{% endblock %}
 
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'partitials/css/buttons.css'%}">
+{% endblock %}
+
 {% block content %}
-    <h1>Amalie</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusamus animi atque deserunt laboriosam libero modi quam similique veniam vero. Accusamus ipsam iure labore odio perferendis placeat quaerat voluptatem voluptatibus.</p>
+    <h1 class="text-center mt-5" style="color: #7dbbb9;">AMALIE</h1>
+    <div class="container mt-3 d-flex justify-content-center">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+              <img src="https://via.placeholder.com/150" class="card-img-top">
+              <div class="card-body">
+                  <h5 class="card-title" style="color: #7dbbb9;">Title 1</h5>
+                  <p class="card-text" style="color: #9cacbf;">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, similique totam! Ab assumenda cupiditate distinctio et iusto minus mollitia neque obcaecati optio qui, totam unde voluptatum. Amet beatae fugiat nisi!
+                  </p>
+                  <a href="#">
+                      <button class="btn custom-button">Read more</button>
+                  </a>
+
+              </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+              <img src="https://via.placeholder.com/150" class="card-img-top">
+              <div class="card-body">
+                  <h5 class="card-title" style="color: #7dbbb9;">Title 2</h5>
+                  <p class="card-text" style="color: #9cacbf;">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, similique totam! Ab assumenda cupiditate distinctio et iusto minus mollitia neque obcaecati optio qui, totam unde voluptatum. Amet beatae fugiat nisi!
+                  </p>
+                  <a href="#">
+                      <button class="btn custom-button">Read more</button>
+                  </a>
+
+              </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+              <img src="https://via.placeholder.com/150" class="card-img-top">
+              <div class="card-body">
+                  <h5 class="card-title" style="color: #7dbbb9;">Title 3</h5>
+                  <p class="card-text" style="color: #9cacbf;">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, similique totam! Ab assumenda cupiditate distinctio et iusto minus mollitia neque obcaecati optio qui, totam unde voluptatum. Amet beatae fugiat nisi!
+                  </p>
+                  <a href="#">
+                      <button class="btn custom-button">Read more</button>
+                  </a>
+
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 {% endblock %}

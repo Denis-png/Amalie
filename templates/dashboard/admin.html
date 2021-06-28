@@ -1,0 +1,29 @@
+{% extends 'dashboard/global.html' %}
+
+{% load static %}
+{% load plotly_dash %}
+{% load bootstrap4 %}
+
+{% block dashboard-content %}
+    <div class="container">
+        <div class="row pt-3">
+            <div class="col border-right">
+                <form action="." method="post">
+                    {% csrf_token %}
+                    <p style="color: #2a5d68;"> Add action to the maintenance list</p>
+                    {{ aciton_form }}
+                    <button type="submit" class="btn custom-button">Add action</button>
+                </form>
+            </div>
+            <div class="col">
+                <p style="color: #2a5d68;"> Update users permissions</p>
+                <div>
+                    {% plotly_app name='Permissions_form' ratio=1 %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+    </div>
+{% endblock %}

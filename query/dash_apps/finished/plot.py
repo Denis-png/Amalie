@@ -11,14 +11,17 @@ import dash
 
 from django_plotly_dash import DjangoDash
 
-app = DjangoDash('Plot')   # replaces dash.Dash
+app = DjangoDash('Plot', add_bootstrap_links=True)   # replaces dash.Dash
 
+app.css.append_css({'external_url': '/static/partitials/css/tabs.css'})
 
 app.layout = html.Div([
     dcc.Tabs(id='options', value='line', children=[
         dcc.Tab(
             label='Line',
             value='line',
+            className='custom-tab',
+            selected_className='custom-tab--selected'
         ),
         dcc.Tab(
             label='Histogram',
