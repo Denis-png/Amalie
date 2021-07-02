@@ -43,7 +43,7 @@ class Select(View):
                        'dash': {cd['feature']: data.values()}})
 
 
-@method_decorator(login_required)
+@login_required
 def save_data(req):
     if req.method == 'POST':
         save = Save(req.POST)

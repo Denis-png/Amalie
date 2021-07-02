@@ -78,16 +78,43 @@ class HistoryView(View):
 class AdminView(View):
     def __init__(self):
         self.action_form = AddAction()
+        self.sensor_form = AddSensorForm()
+        self.action_list = list(MaintenanceActions.objects.all().using('global').values_list('label', 'value'))
+        self.sensor_list = list(Sensors.objects.all().using('global'))
 
     def get(self, req):
-        return render(req, 'dashboard/admin.html', {'aciton_form': self.action_form})
+        return render(req, 'dashboard/admin.html', {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
 
     def post(self, req):
-        action_form = AddAction(req.POST)
-        if action_form.is_valid():
-            cd = action_form.cleaned_data
-            action = MaintenanceActions(label=cd['action'], value=cd['action'])
-            action.save(using='global')
-            return render(req, 'dashboard/admin.html', {'aciton_form': self.action_form})
+        if 'add_action' in req.POST:
+            action_form = AddAction(req.POST)
+            if action_form.is_valid():
+                cd = action_form.cleaned_data
+                action = MaintenanceActions(label=cd['action'], value=cd['action'])
+                action.save(using='global')
+                self.action_list = list(MaintenanceActions.objects.all().using('global').values_list('label', 'value'))
+                return render(req, 'dashboard/admin.html', {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
+        elif 'add_sensor' in req.POST:
+            sensor_form = AddSensorForm(req.POST)
+            if sensor_form.is_valid():
+                cd = sensor_form.cleaned_data
+                sensor = Sensors(sensor_id=cd['sensor_id'], sensor_name=cd['sensor_name'],
+                                 company=cd['company'], measured_quantity=cd['measured_quantity'],
+                                 calibration_interval=cd['calibration_interval'],
+                                 units=cd['units'])
+                sensor.save(using='global')
+                self.sensor_list = list(Sensors.objects.all().using('global'))
+                return render(req, 'dashboard/admin.html',
+                              {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
+        else:
+            to_remove = req.POST['remove_action']
+            print(to_remove)
+            MaintenanceActions.objects.filter(label=to_remove).using('global').delete()
+            self.action_list = list(MaintenanceActions.objects.all().using('global').values_list('label', 'value'))
+            return render(req, 'dashboard/admin.html',
+                              {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
+
+        return render(req, 'dashboard/admin.html',
+                          {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
 
 

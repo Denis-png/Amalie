@@ -72,12 +72,14 @@ def update_input(pathname):
     Input('confirm', 'n_clicks')
 )
 def update_output(date_value, value, user, n_clicks):
-    if date_value is not None:
-        date_object = date.fromisoformat(date_value)
-        date_string = date_object.strftime('%B %d, %Y')
-        if n_clicks > 0 and value is not None and user is not None:
-            string_prefix = '{} was perfomed on: '.format(value)
-            return string_prefix + date_string + ' by ' + user
+    if n_clicks > 0:
+        button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+        if date_value is not None:
+            date_object = date.fromisoformat(date_value)
+            date_string = date_object.strftime('%B %d, %Y')
+            if button_id == 'confirm' and value is not None and user is not None:
+                string_prefix = '{} was perfomed on: '.format(value)
+                return string_prefix + date_string + ' by ' + user
 
 
 

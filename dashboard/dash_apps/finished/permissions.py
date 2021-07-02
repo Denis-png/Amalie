@@ -42,7 +42,7 @@ def update_input(pathname):
     return html.Div(
         dcc.Dropdown(
             id='users',
-            options=[{'label': user['first_name'] + ' ' + user['last_name'], 'value': user['email']} for user in
+            options=[{'label': user['first_name'] + ' ' + user['last_name'] + ' ({})'.format(user['email']), 'value': user['email']} for user in
                      CustomUser.objects.all().values('email', 'first_name', 'last_name')]
         )
     )
@@ -58,13 +58,15 @@ def update_output(email, role, n_clicks):
     string_prefix = 'You have updated user '
     if email is not None:
         if n_clicks > 0:
-            if role == 'common':
-                CustomUser.objects.filter(email=email).update(is_technician=False, is_scientist=False)
-            elif role == 'tech':
-                CustomUser.objects.filter(email=email).update(is_technician=True)
-            elif role == 'sci':
-                CustomUser.objects.filter(email=email).update(is_scientist=True)
-            return string_prefix + email + ' with role ' + role
+            button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+            if button_id == 'upgrade':
+                if role == 'common':
+                    CustomUser.objects.filter(email=email).update(is_technician=False, is_scientist=False)
+                elif role == 'tech':
+                    CustomUser.objects.filter(email=email).update(is_technician=True)
+                elif role == 'sci':
+                    CustomUser.objects.filter(email=email).update(is_scientist=True)
+                return string_prefix + email + ' with role ' + role
 
 
 

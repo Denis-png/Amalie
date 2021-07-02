@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import *
-from .dash_apps.finished import calibration_form, maintenance, permissions
+from .dash_apps.finished import calibration_form, maintenance, permissions, table_edit
 
 urlpatterns = [
     # GENERAL PATH
