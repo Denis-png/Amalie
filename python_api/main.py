@@ -1,8 +1,11 @@
-from math import isnan
+
 from datetime import datetime,date,timedelta
 import time
+from os import listdir
 from Cleverfarm import CleverfarmAPI
+from Tomst import Tomst
 from Database import DataDB
+import pandas as pd
 
 # Script run
 # Start timer
@@ -12,9 +15,19 @@ new_set = CleverfarmAPI()
 # Get all features names and update them as dictionary key
 new_set.get_features()
 # Get data from all api and store it in a dict variable {'feature_name':[data]}
-data = new_set.create_df_from_api()
+cleverfarm = new_set.create_df_from_api()
+
+if listdir('/home/eds/Amalie_03/python_api/tomst_files_new'):
+	tomst_init = Tomst('/home/eds/Amalie_03/python_api/tomst_files_new')
+	tomst_init.get_data()
+	tomst = tomst_init.process_data(cleverfarm)
+else:
+	tomst = {}
+	
+data = {**cleverfarm, **tomst}
+
 # Init database object for specified schema
-server = DataDB('cleverfarm')
+server = DataDB('global')
 
 for table in data.keys():
     # For each feature create list of tuples (rows) from dataset
@@ -23,11 +36,12 @@ for table in data.keys():
     actual = server.get_actual(table)
     nan = server.get_nan(table)
     for row in rows:
-        if (row[0],datetime.strptime(row[1], "%Y-%m-%d").date(),datetime.strptime(row[2],"%H:%M:%S").time()) not in actual:
+        if (row[0], row[1], row[2]) not in actual:
             server.insert_rows(table,row)
             print('Added data to {} successfully'.format(table))
-        if ((row[0],datetime.strptime(row[1], "%Y-%m-%d").date(),datetime.strptime(row[2],"%H:%M:%S").time()) in nan) \
-                    & (not isnan(row[3])):
+        if ((row[0], row[1], row[2]) in nan) \
+                    & (not pd.isna(row[3])):
+            print(row[3])
             server.update_nan(table, row[::-1])
 
 

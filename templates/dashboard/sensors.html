@@ -23,38 +23,40 @@
                     <thead class="table-light">
                         <tr>
                             <td>id</td>
-                            <td>sensor_id</td>
                             <td>sensor_name</td>
-                            <td>company</td>
-                            <td>measured_quantity</td>
-                            <td>geometry</td>
-                            <td>calibration_interval</td>
-                            <td>calibrated_on</td>
-                            <td>units</td>
-                            <td>limit_min</td>
-                            <td>limit_max</td>
+                            <td>serial number</td>
+                            <td>x</td>
+                            <td>y</td>
+                            <td>elevation</td>
+                            <td>price</td>
+                            <td>connection_id</td>
+                            <td>sensor_type_id</td>
+                            <td>note</td>
+                            <td>spatial_precision</td>
+                            <td>warranty</td>
                         </tr>
                     </thead>
                     <tbody>
                         {% for row in data %}
                             <tr>
                                 <td>{{ row.id }}</td>
-                                <td>{{ row.sensor_id }}</td>
                                 <td>{{ row.sensor_name }}</td>
-                                <td>{{ row.company }}</td>
-                                <td>{{ row.measured_quantity }}</td>
-                                <td>{{ row.geometry }}</td>
-                                <td>{{ row.calibration_interval }}</td>
-                                <td>{{ row.calibrated_on }}</td>
-                                <td>{{ row.units }}</td>
-                                <td>{{ row.limit_min }}</td>
-                                <td>{{ row.limit_max }}</td>
+                                <td>{{ row.serial_number }}</td>
+                                <td>{{ row.x }}</td>
+                                <td>{{ row.y }}</td>
+                                <td>{{ row.elevation }}</td>
+                                <td>{{ row.price }}</td>
+                                <td>{{ row.connection_id }}</td>
+                                <td>{{ row.sensor_type_id }}</td>
+                                <td>{{ row.note }}</td>
+                                <td>{{ row.spatial_precision }}</td>
+                                <td>{{ row.warranty }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
             </table>
-            <p class="pl-0 mt-2" style="color: #2a5d68; font-weight: bold"> Update last calibration date</p>
-            {% plotly_app name='Calibration_form' ratio=0.4 %}
+            <!---*<p class="pl-0 mt-2" style="color: #2a5d68; font-weight: bold"> Update last calibration date</p>
+            % plotly_app name='Calibration_form' ratio=0.4 %--->
         </div>
         <div class="row mt-0">
             <p class="text-center mt-5" style="color: #2a5d68; font-weight: bold">Maintenance form</p>

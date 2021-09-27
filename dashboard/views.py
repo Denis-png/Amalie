@@ -42,8 +42,8 @@ class SensorsView(View):
         sensor = SelectSensor(req.POST)
         if sensor.is_valid():
             cd = sensor.cleaned_data
-            table = Sensors.objects.filter(sensor_id=cd['sensor_id']).using('global')
-            req.session['selected_sensor'] = cd['sensor_id']
+            table = Sensors.objects.filter(pk=int(cd['sensor_id'][0])).using('global')
+            req.session['selected_sensor'] = int(cd['sensor_id'][0])
             return render(req, '../templates/dashboard/sensors.html', {'select_sensor': sensor, 'data': table})
 
 
@@ -78,12 +78,12 @@ class HistoryView(View):
 class AdminView(View):
     def __init__(self):
         self.action_form = AddAction()
-        self.sensor_form = AddSensorForm()
+        self.person_form = AddPerson()
         self.action_list = list(MaintenanceActions.objects.all().using('global').values_list('label', 'value'))
         self.sensor_list = list(Sensors.objects.all().using('global'))
 
     def get(self, req):
-        return render(req, 'dashboard/admin.html', {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
+        return render(req, 'dashboard/admin.html', {'action_form': self.action_form, 'action_list': self.action_list, 'sensor_list': self.sensor_list, 'person_form': self.person_form})
 
     def post(self, req):
         if 'add_action' in req.POST:
@@ -93,28 +93,26 @@ class AdminView(View):
                 action = MaintenanceActions(label=cd['action'], value=cd['action'])
                 action.save(using='global')
                 self.action_list = list(MaintenanceActions.objects.all().using('global').values_list('label', 'value'))
-                return render(req, 'dashboard/admin.html', {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
-        elif 'add_sensor' in req.POST:
-            sensor_form = AddSensorForm(req.POST)
-            if sensor_form.is_valid():
-                cd = sensor_form.cleaned_data
-                sensor = Sensors(sensor_id=cd['sensor_id'], sensor_name=cd['sensor_name'],
-                                 company=cd['company'], measured_quantity=cd['measured_quantity'],
-                                 calibration_interval=cd['calibration_interval'],
-                                 units=cd['units'])
-                sensor.save(using='global')
-                self.sensor_list = list(Sensors.objects.all().using('global'))
-                return render(req, 'dashboard/admin.html',
-                              {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
-        else:
+                return render(req, 'dashboard/admin.html', {'action_form': self.action_form, 'action_list': self.action_list, 'sensor_list': self.sensor_list})
+        elif 'remove_action' in req.POST:
             to_remove = req.POST['remove_action']
             print(to_remove)
             MaintenanceActions.objects.filter(label=to_remove).using('global').delete()
             self.action_list = list(MaintenanceActions.objects.all().using('global').values_list('label', 'value'))
             return render(req, 'dashboard/admin.html',
-                              {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
+                              {'action_form': self.action_form, 'action_list': self.action_list, 'sensor_list': self.sensor_list})
+        elif 'add_person' in req.POST:
+            person_form = AddPerson(req.POST)
+            if person_form.is_valid():
+                cd = person_form.cleaned_data
+                person = People(first_name=cd['first_name'], last_name=cd['last_name'], email=cd['email'],
+                                technician_czu=cd['technician_czu'], technician_company=cd['technician_company'],
+                                sensor_type_id=int(cd['sensor_type'][0]))
+                person.save(using='global')
+                return render(req, 'dashboard/admin.html', {'action_form': self.action_form, 'action_list': self.action_list, 'sensor_list': self.sensor_list, 'person_form': self.person_form})
+
 
         return render(req, 'dashboard/admin.html',
-                          {'action_form': self.action_form, 'action_list': self.action_list, 'add_sensor': self.sensor_form, 'sensor_list': self.sensor_list})
+                          {'action_form': self.action_form, 'action_list': self.action_list, 'sensor_list': self.sensor_list, 'person_form': self.person_form})
 
 

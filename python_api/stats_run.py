@@ -9,7 +9,7 @@ from Cleverfarm import CleverfarmAPI
 start = time.time()
 
 # Init stats object on cleverfarm schema
-stats_month = Stats('cleverfarm')
+stats_month = Stats('global')
 # Init empty object with api list
 api = CleverfarmAPI()
 # Get all features names and update them as dictionary key

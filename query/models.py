@@ -1,12 +1,15 @@
 import datetime
 
 from django.db import models
+from dashboard.models import Sensors, Variables
 
 table_names = ['SWP', 'TEMPERATURE', 'PRESSURE', 'HUMIDITY', 'RAINFALL', 'LEAF_WETNESS', 'WIND_DIRECTION', 'WIND_GUST', 'WIND_SPEED']
 
 
 class Data(models.Model):
-    sensor_name = models.CharField(max_length=255, null=False)
+    sensor = models.ForeignKey(Sensors, on_delete=models.SET_NULL, null=True)
+    variable = models.ForeignKey(Variables, on_delete=models.SET_NULL, null=True)
+    #sensor_name = models.CharField(max_length=255, null=False)
     date = models.DateField()
     time = models.TimeField()
     value = models.FloatField(null=True)
@@ -15,7 +18,7 @@ class Data(models.Model):
     objects = models.Manager()
 
     class Meta:
-        managed = False
+        managed = True
         abstract = True
 
 
@@ -72,4 +75,10 @@ class Wng(Data):
 class Wns(Data):
     class Meta:
         db_table = table_names[8]
+
+
+class Rst(Data):
+    class Meta:
+        db_table = 'RESISTANCE'
+
 

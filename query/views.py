@@ -34,8 +34,7 @@ class Select(View):
             cd = params.cleaned_data
             for feature in features:
                 if cd['feature'] == feature.__name__:
-                    for company in companies:
-                        data = feature.objects.filter(date__gt=cd['date_from'], date__lt=cd['date_to']).using(company)
+                    data = feature.objects.filter(date__gt=cd['date_from'], date__lt=cd['date_to']).using('global')
             req.session['data'] = json.dumps(list(data.values()), cls=DjangoJSONEncoder)
             req.session['django_plotly_dash'] = json.dumps(list(data.values()), cls=DjangoJSONEncoder)
         return render(req, '../templates/query/selection_page.html',

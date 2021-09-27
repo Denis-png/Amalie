@@ -1,7 +1,7 @@
 from query.models import *
 from dashboard.models import *
 
-GLOBAL = [Sensors, MaintenanceActions]
+GLOBAL = [API, Variables, Project, SensorType, Sensors, SensorsGroup, SensorVariable, Maintenance, Condition, MaintenanceActions]
 CLEVERFARM = [Swp, Tmp, Hum, Rnf, Lfw, Prs, Wnd, Wng, Wns]
 DVORAK = []
 

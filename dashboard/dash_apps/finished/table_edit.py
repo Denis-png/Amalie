@@ -8,28 +8,28 @@ from django_plotly_dash import DjangoDash
 
 from dashboard.models import *
 
+models_list = [Sensors, SensorType, SensorVariable, SensorsGroup, API, Variables, Project]
+models_options = []
+for model in models_list:
+    models_options.append({'label': model.__name__, 'value': model.__name__})
+
 app = DjangoDash('Table_Edit', external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-params = [
-    'Weight', 'Torque', 'Width', 'Height',
-    'Efficiency', 'Power', 'Displacement'
-]
 
-
-def get_fields():
+def get_fields(model):
     field_list = []
-    for f in Sensors._meta.get_fields():
-        if f.name == 'id' or f.name == 'calibrated_on':
+    for f in model._meta.concrete_fields:
+        if f.name == 'id':
             field_list.append({'name': f.name, 'id': f.name, 'editable': False})
         else:
             field_list.append({'name': f.name, 'id': f.name})
     return field_list
 
 
-def get_field_values():
+def get_field_values(model):
     data = []
-    columns = get_fields()
-    for row in Sensors.objects.using('global').values_list():
+    columns = get_fields(model)
+    for row in model.objects.using('global').values_list():
         count = 0
         temp_row = {}
         for col in columns:
@@ -48,8 +48,14 @@ app.layout = html.Div([
             rel='stylesheet',
             href='/static/partitials/css/labels.css'
         ),
+    dcc.Dropdown(
+        id='models_list',
+        options=models_options,
+        className='mb-3'
+
+    ),
     dcc.Location(id='url'),
-    html.Div(id='output-container', className='custom-table d-flex justify-content-center'),
+    html.Div(id='output-container', className='d-flex justify-content-center', style={"overflow-x": "scroll"}),
     html.Div(id='output-container-1'),
     html.Button('+', id='editing-rows-button', n_clicks=0, className='btn custom-button-static mt-3'),
     html.Button('Confirm changes', id='confirm-button', n_clicks=0, className='btn custom-button ml-2 mt-3')
@@ -60,19 +66,25 @@ app.layout = html.Div([
 @app.callback(
     Output('output-container', 'children'),
     Input('url', 'pathname'),
+    Input('models_list', 'value'),
 )
-def update_table(pathname):
-    return dash_table.DataTable(
-        id='table-editing',
-        columns=(get_fields()),
-        data=get_field_values(),
-        row_deletable=True,
-        editable=True,
-        style_cell={
-            'color': '#2a5d68',
-            'padding': '5px',
-        },
-    )
+def update_table(pathname, model):
+    for table in models_list:
+        if model == table.__name__:
+            return dash_table.DataTable(
+                id='table-editing',
+                columns=(get_fields(table)),
+                data=get_field_values(table),
+                row_deletable=True,
+                editable=True,
+                style_data={
+                    'color': '#2a5d68',
+                    'overflow': 'hidden',
+                    'textOverflow': 'ellipsis',
+                    'maxWidth': 0,
+                    'whiteSpace': 'normal'
+                },
+            )
 
 
 @app.callback(
@@ -90,16 +102,19 @@ def add_row(n_clicks, rows, cols):
 @app.callback(
     Output('output-container-1', 'children'),
     Input('table-editing', 'data'),
-    Input('confirm-button', 'n_clicks')
+    Input('confirm-button', 'n_clicks'),
+    Input('models_list', 'value'),
 )
-def save_changes(data, n):
+def save_changes(data, n, model):
     if n > 0:
         button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
         if button_id == 'confirm-button':
-            remove(data)
-            create(data)
-            update(data)
-            return 'Updated'
+            for table in models_list:
+                if model == table.__name__:
+                    remove(data, table)
+                    create(data, table)
+                    update(data, table)
+                    return 'Updated'
 
 
 '''
@@ -108,37 +123,39 @@ FUNCTIONS FOR THE DATA TABLE OPERATIONS
 
 
 # ADD ROW
-def create(data):
+def create(data, table):
     for row in data:
         try:
-            Sensors.objects.using('global').get(id=row['id'])
+            table.objects.using('global').get(id=row['id'])
         except ValueError:
-            sensor = Sensors(sensor_id=row['sensor_id'], sensor_name=row['sensor_name'],
-                             company=row['company'], measured_quantity=row['measured_quantity'],
-                             geometry=row['geometry'],
-                             calibration_interval=row['calibration_interval'], units=row['units'])
-            sensor.save(using='global')
-            return row['sensor_id']
+            new_row = {}
+            for field, value in row.items():
+                if value != '':
+                    new_row.update({field: value})
+            table.objects.using('global').create(**new_row)
+            table.save(using='global')
+    return table.__name__
 
 
 # REMOVE ROW
-def remove(data):
-    db_list = Sensors.objects.using('global').values('id')
+def remove(data, table):
+    db_list = table.objects.using('global').values('id')
     new_list = [row['id'] for row in data]
     removed = []
-    for sensor in db_list:
-        if sensor['id'] not in new_list:
-            removed.append(sensor['id'])
-            Sensors.objects.using('global').get(id=sensor['id']).delete()
+    for record in db_list:
+        if record['id'] not in new_list:
+            removed.append(record['id'])
+            table.objects.using('global').get(id=record['id']).delete()
+
     return removed
 
 
 # UPDATE
-def update(data):
+def update(data, table):
     for row in data:
         if row['id']:
             row_id = row.pop('id')
-            Sensors.objects.filter(id=row_id).using('global').update(**row)
+            table.objects.filter(id=row_id).using('global').update(**row)
     return 'done'
 
 

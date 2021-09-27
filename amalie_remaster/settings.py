@@ -26,7 +26,7 @@ SECRET_KEY = 'i9(i$-sb#mwfao-409+^l_26mze$1zu*4k*j8v%wt8e!yea+e$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -134,8 +134,8 @@ DATABASES = {
             'options': '-c search_path=main'
         },
         'NAME': 'origin',
-        'USER': 'postgres',
-        'PASSWORD': 'vfrcfqvth',
+	'USER': 'eds',
+        'PASSWORD': 'eds2021',
         'HOST': 'localhost',
         'PORT': '5432',
     },
@@ -145,16 +145,16 @@ DATABASES = {
             'options': '-c search_path=cleverfarm'
         },
         'NAME': 'data',
-        'USER': 'postgres',
-        'PASSWORD': 'vfrcfqvth',
+	'USER': 'eds',
+        'PASSWORD': 'eds2021',
         'HOST': 'localhost',
         'PORT': '5432',
     },
     'analytics': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'analytics',
-        'USER': 'postgres',
-        'PASSWORD': 'vfrcfqvth',
+	'USER': 'eds',
+        'PASSWORD': 'eds2021',
         'HOST': 'localhost',
         'PORT': '5432',
     },
@@ -164,13 +164,12 @@ DATABASES = {
             'options': '-c search_path=global'
         },
         'NAME': 'data',
-        'USER': 'postgres',
-        'PASSWORD': 'vfrcfqvth',
+	'USER': 'eds',
+        'PASSWORD': 'eds2021',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
 
 # AUTHENTICATION
 

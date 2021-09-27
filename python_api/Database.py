@@ -5,8 +5,8 @@ import psycopg2
 params = {
     'host': 'localhost',
     'database': 'data',
-    'user': 'postgres',
-    'password': 'vfrcfqvth',
+    'user': 'eds',
+    'password': 'eds2021',
     'port': '5432'
 }
 
@@ -23,7 +23,7 @@ class DataDB:
     def get_nan(self, tables):
         if self.conn:
             cursor = self.conn.cursor()
-            cursor.execute("SELECT sensor_name,date,time FROM %s.\"%s\" WHERE value = double precision 'NaN'" % (self.schema, tables))
+            cursor.execute("SELECT sensor_id, date,time FROM %s.\"%s\" WHERE value = double precision 'NaN'" % (self.schema, tables))
             temp = cursor.fetchall()
             cursor.close()
             return temp
@@ -32,7 +32,7 @@ class DataDB:
     def get_actual(self, tables):
         if self.conn:
             cursor = self.conn.cursor()
-            cursor.execute("SELECT sensor_name,date,time FROM %s.\"%s\" WHERE date >= '%s'" % (self.schema, tables, (date.today() - timedelta(days=1))))
+            cursor.execute("SELECT sensor_id,date,time FROM %s.\"%s\" WHERE date >= '%s'" % (self.schema, tables, (date.today() - timedelta(days=1))))
             temp = cursor.fetchall()
             cursor.close()
             return temp
@@ -40,7 +40,7 @@ class DataDB:
     # Method for inserting rows into datatable(should be used with get_actual() to avoid duplications)
     def insert_rows(self,tables, rows):
         if self.conn:
-            query = "INSERT INTO %s.\"%s\"(sensor_name,date,time,value,signal) VALUES(%%s,%%s,%%s,%%s,%%s)" % (self.schema, tables)
+            query = "INSERT INTO %s.\"%s\"(sensor_id,date,time,value,signal,variable_id) VALUES(%%s,%%s,%%s,%%s,%%s,%%s)" % (self.schema, tables)
             cursor = self.conn.cursor()
             cursor.execute(query,rows)
             self.conn.commit()
@@ -49,8 +49,8 @@ class DataDB:
     # Method for updating NaN values if new received are not NaN
     def update_nan(self, tables, row):
         if self.conn:
-            query = "UPDATE %s.\"%s\" SET signal = %%s, value = %%s " \
-                    "WHERE time = %%s AND date = %%s AND sensor_name = %%s " \
+            query = "UPDATE %s.\"%s\" SET variable_id = %%s, signal = %%s, value = %%s " \
+                    "WHERE time = %%s AND date = %%s AND sensor_id = %%s" \
                     "AND value = double precision 'NaN'" % (self.schema, tables)
             cursor = self.conn.cursor()
             cursor.execute(query,row)
