@@ -1,0 +1,38 @@
+{% load static %}
+{% load plotly_dash %}
+{% load bootstrap4 %}
+
+
+<div style="height: 600px; overflow-y: scroll" class="custom-table">
+    <table class="table table-hover">
+    <thead class="table-light">
+        <tr>
+            <td>id</td>
+            <td>sensor_name</td>
+            <td>date</td>
+            <td>time</td>
+            <td>value</td>
+            <td>signal</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.sensor_name }}</td>
+                <td>{{ row.date }}</td>
+                <td>{{ row.time }}</td>
+                <td>{{ row.value }}</td>
+                <td>{{ row.signal }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+{% include 'query/save.html' with save=save %}
+
+<div>
+    {% plotly_app name='Plot' ratio=1 %}
+</div>

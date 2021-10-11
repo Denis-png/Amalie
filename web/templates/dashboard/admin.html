@@ -1,0 +1,58 @@
+{% extends 'dashboard/global.html' %}
+
+{% load static %}
+{% load plotly_dash %}
+{% load bootstrap4 %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'partitials/css/labels.css'%}">
+{% endblock %}
+
+{% block dashboard-content %}
+    <div class="container">
+        <div class="row pt-3">
+            <div class="col border-right">
+                <form action="." method="post">
+                    {% csrf_token %}
+                    <p style="color: #2a5d68;font-weight: bold"> Add action to the maintenance list</p>
+                    {{ action_form }}
+                    <button type="submit" class="btn custom-button" name="add_action">Add action</button>
+                </form>
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <p style="color: #2a5d68;font-weight: bold"> Remove action from the maintenance list</p>
+                    <select class="form-control" id="make" name='remove_action'>
+                        {% for action in action_list %}
+                            <option value='{{action.0}}'>{{ action.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn custom-button mt-3">Remove action</button>
+                </form>
+            </div>
+            <div class="col">
+                <p style="color: #2a5d68; font-weight: bold"> Update users permissions</p>
+                <div>
+                    {% plotly_app name='Permissions_form' ratio=1 %}
+                </div>
+            </div>
+        </div>
+        <div class="row border-top">
+            <div class="mt-3">
+                
+            </div>
+        </div>
+        <div class="row border-top">
+            <div class="col border-right p-3">
+		<form method="post">
+                    <p style="color: #2a5d68;font-weight: bold"> Add a new user to the people table</p>
+                    {% csrf_token %}
+                    {{ person_form.as_p }}
+                    <button type="submit" name="add_person">Add</button>
+                </form>
+            </div>
+            <div class="col p-3">
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

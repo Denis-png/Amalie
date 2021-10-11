@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{# Load CSS and JavaScript #}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'partitials/css/labels.css'%}">
+{% endblock %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row d-flex justify-content-center mt-5">
+            <form action="." method="POST" style="border: 1px solid #c5d7d9; border-radius: 15px; width: 600px; height: 600px;" class="d-flex justify-content-center flex-md-column align-items-center">
+                <h5 class="text-center mb-4 mt-2 " style="color: #2a5d68; font-size: 40px"> Sign up </h5>
+                {% csrf_token %}
+                {{ signup.as_p }}
+                <button type="submit" class="btn custom-button-static">Register</button>
+            </form>
+            {% if err %}
+                {{ err }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
