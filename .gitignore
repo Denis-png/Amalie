@@ -11,3 +11,6 @@ python_scripts_1/EmsBrno/.env
 python_scripts_1/Tomst/.env
 python_scripts_1/Vrty/.env
 python_scripts_1/Database/Backups
+python_scripts/Tomst/files_new
+python_scripts/Tomst/files_collected
+python_scripts/Tomst/tomst_test_data

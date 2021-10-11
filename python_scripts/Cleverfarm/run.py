@@ -1,7 +1,6 @@
 import time
 from os import listdir
-
-from .. import Database
+from ..Database.Database import DataDB
 from Cleverfarm import CleverfarmAPI
 import pandas as pd
 
@@ -18,7 +17,7 @@ data = new_set.create_df_from_api()
 # Get date range for new collected dataframe
 date_range = new_set.get_date_range()
 # Init database object for specified schema
-db = Database.DataDB()
+db = DataDB()
 
 # Preprocessing and inserting data to database
 for table in data.keys():
