@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import requests
 from datetime import datetime
-from python_scripts.Database.Database import DataDB
+from ..Database.Database import DataDB
 from dotenv import dotenv_values, load_dotenv
 
 # Getting environment variables

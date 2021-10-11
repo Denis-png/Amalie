@@ -1,7 +1,7 @@
 import time
 from os import listdir
+from ..Database.Database import DataDB
 from Cleverfarm import CleverfarmAPI
-from python_scripts.Database.Database import DataDB
 import pandas as pd
 
 # Script run
