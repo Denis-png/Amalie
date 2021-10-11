@@ -10,3 +10,4 @@ python_scripts/Ekotechnika/.env
 python_scripts/EmsBrno/.env
 python_scripts/Tomst/.env
 python_scripts/Vrty/.env
+python_scripts/Database/Backups
