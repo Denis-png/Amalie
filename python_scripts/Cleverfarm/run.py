@@ -1,8 +1,14 @@
 import time
 from os import listdir
-from ..Database.Database import DataDB
+import sys
+
 from Cleverfarm import CleverfarmAPI
 import pandas as pd
+
+
+sys.path.append('/home/eds/Current/Amalie/python_scripts/Database')
+
+from Database import DataDB
 
 # Script run
 # Start timer

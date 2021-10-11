@@ -1,8 +1,12 @@
 from python_scripts.Tomst.Tomst import Tomst
 import time
-from python_scripts.Database.Database import DataDB
 import pandas as pd
 from os import listdir
+import sys
+
+sys.path.append('/home/eds/Current/Amalie/python_scripts/Database')
+
+from Database import DataDB
 
 # Script run
 while len(listdir('files_new')) > 0:
