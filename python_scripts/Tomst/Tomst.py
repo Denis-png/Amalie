@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
 from os import listdir, replace, path, mkdir
-from python_scripts.Database.Database import DataDB
+from Database import DataDB
 
 
 class Tomst:

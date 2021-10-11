@@ -1,9 +1,11 @@
 import json
 import pandas as pd
 import requests
-from datetime import datetime
+import sys
 from ..Database.Database import DataDB
 from dotenv import dotenv_values, load_dotenv
+
+sys.path.append('/home/eds/Current/Amalie/python_scripts')
 
 # Getting environment variables
 env = dotenv_values()
