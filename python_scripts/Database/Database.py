@@ -63,7 +63,7 @@ class DataDB:
         if self.conn:
             cursor = self.conn.cursor()
             cursor.execute(
-                "SELECT id FROM global.dashboard_sensors WHERE sensor_name = '%s' " % sensor_name)
+                "SELECT id FROM global.sensors WHERE sensor_name = '%s' " % sensor_name)
             sensor_id = cursor.fetchone()
             cursor.close()
             return int(sensor_id[0])
@@ -73,7 +73,7 @@ class DataDB:
         if self.conn:
             cursor = self.conn.cursor()
             cursor.execute(
-                "SELECT id FROM global.dashboard_sensors WHERE serial_number = '%s' " % serial)
+                "SELECT id FROM global.sensors WHERE serial_number = '%s' " % serial)
             sensor_id = cursor.fetchone()
             cursor.close()
             return int(sensor_id[0])
@@ -83,7 +83,7 @@ class DataDB:
         if self.conn:
             cursor = self.conn.cursor()
             cursor.execute(
-                "SELECT id FROM global.dashboard_variables WHERE variable_id = '%s' " % variable_id)
+                "SELECT id FROM global.variables WHERE variable_id = '%s' " % variable_id)
             variable_id = cursor.fetchone()
             cursor.close()
             return int(variable_id[0])

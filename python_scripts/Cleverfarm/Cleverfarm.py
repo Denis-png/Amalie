@@ -1,9 +1,12 @@
 import json
 import pandas as pd
 import requests
-from datetime import datetime
-from ..Database.Database import DataDB
 from dotenv import dotenv_values, load_dotenv
+import sys
+
+sys.path.append('/home/eds/Current/Amalie/python_scripts/Database')
+
+from Database import DataDB
 
 # Getting environment variables
 env = dotenv_values()
@@ -51,7 +54,7 @@ class CleverfarmAPI:
                         df['time'] = df['time'].dt.time
 
                         df.insert(4, 'signal', res.json()['signal'])  # Column with signal property
-
+	
                         variable_id = self.db.get_variable_id(sensor['feature'])  # Variable_id
                         df.loc[:, 'variable_id'] = variable_id
 

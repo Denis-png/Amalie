@@ -1,8 +1,11 @@
 import pandas as pd
 from datetime import datetime
 from os import listdir, replace, path, mkdir
-from python_scripts.Database.Database import DataDB
+import sys
 
+sys.path.append('/home/eds/Current/Amalie/python_scripts/Database')
+
+from Database import DataDB
 
 class Tomst:
     def __init__(self, dir: str):
