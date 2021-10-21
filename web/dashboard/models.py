@@ -164,3 +164,134 @@ class Variables(models.Model):
     class Meta:
         managed = False
         db_table = 'variables'
+
+
+class data_Humidity(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'HUMIDITY'
+
+
+class data_LeafWetness(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'LEAF_WETNESS'
+
+
+class data_Pressure(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'PRESSURE'
+
+
+class data_Rainfall(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'RAINFALL'
+
+
+class data_Resistance(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'RESISTANCE'
+
+
+class data_Swp(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'SWP'
+
+
+class data_Temperature(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'TEMPERATURE'
+
+
+class data_WindDirection(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'WIND_DIRECTION'
+
+
+class data_WindGust(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'WIND_GUST'
+
+
+class data_WindSpeed(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    value = models.FloatField(blank=True, null=True)
+    signal = models.CharField(max_length=200)
+    sensor_id = models.IntegerField(blank=True, null=True)
+    variable_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'WIND_SPEED'

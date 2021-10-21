@@ -38,14 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'bootstrap4',
-    'channels',
-    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
-    'dpd_static_support',
     'dashboard.apps.DashboardConfig',
-    'query.apps.QueryConfig',
     'users.apps.UsersConfig',
-
 ]
 
 MIDDLEWARE = [
@@ -59,9 +53,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
 
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
-    'django_plotly_dash.middleware.BaseMiddleware',
-    'django_plotly_dash.middleware.ExternalRedirectionMiddleware',
 
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
@@ -90,35 +81,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'amalie_remaster.wsgi.application'
 
 ASGI_APPLICATION = 'amalie_remaster.routing.application'
-
-# PLOTLY-DASH-REDIS-CHANNELS
-
-X_FRAME_OPTIONS = 'SAMEORIGIN'
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('127.0.0.1', 6379),],
-        },
-    },
-}
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-PLOTLY_COMPONENTS = [
-    'dash_core_components',
-    'dash_html_components',
-    'dash_renderer',
-
-    # django-plotly-dash components
-    'dpd_components',
-    # static support if serving local assets
-    'dpd_static_support',
-
-    # Other components, as needed
-    'dash_bootstrap_components',
-]
 
 # Databases
 DATABASES = {
@@ -158,7 +120,7 @@ LOGIN_URL = '/auth/login/'
 
 LOGIN_REDIRECT_URL = '/auth/login/'
 
-LOGOUT_REDIRECT_URL = '/home/'
+LOGOUT_REDIRECT_URL = '/auth/login/'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -198,22 +160,19 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images) and whitenoise for dev
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
 
-STATICFILES_LOCATION = 'static'
+STATICFILES_LOCATION = 'staticfiles'
 
-STATIC_ROOT = 'static'
+STATIC_ROOT = 'staticfiles'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'amalie_remaster/static')
+    BASE_DIR / 'amalie_remaster/staticfiles'
 ]
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'django_plotly_dash.finders.DashAssetFinder',
-    'django_plotly_dash.finders.DashComponentFinder',
-    'django_plotly_dash.finders.DashAppDirectoryFinder',
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

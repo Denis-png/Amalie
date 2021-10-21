@@ -1,10 +1,13 @@
 import json
-
 import requests
 import pandas as pd
 from dotenv import dotenv_values
 from datetime import datetime
-from python_scripts.Database.Database import DataDB
+import sys
+sys.path.append('/home/eds/Current/Amalie/python_scripts/Database')
+
+#from Database import DataDB
+from ..Database.Database import DataDB
 
 # Get environment variables
 env = dotenv_values()
@@ -19,7 +22,6 @@ class Vrty:
     def get_data(self, date_from, date_to):
         for url in self.api:
             data = requests.request("GET", url.format(date_from, date_to), headers=self.headers, data={})
-            print(data.text)
             df = pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'signal', 'variable_id'])
 
             result = {'TEMPERATURE': df, 'HUMIDITY': df, 'WATER_LEVEL': df, 'WATER_TEMPERATURE': df}
@@ -27,7 +29,7 @@ class Vrty:
             for record in data.json():
 
                 serial_number = record['srcImsi']
-                # sensor_id = self.db.get_sensor_id_by_serial(serial_number)
+                sensor_id = self.db.get_sensor_id_by_serial(serial_number)
 
                 date = datetime.strptime(record['timestampUtc'][:10], '%Y-%m-%d').date()
                 time = datetime.strptime(record['timestampUtc'][11:19], '%H:%M:%S').time()

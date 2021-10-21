@@ -1,0 +1,68 @@
+{% extends "dashboard/global.html" %}
+
+{% load static %}
+
+{% block title %}Query{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/components/query_forms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/dropdowns.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/table.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/plots.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.1.1/dist/chartjs-plugin-zoom.min.js"></script>
+{% endblock %}
+
+
+
+{% block dashboard-content %}
+    <div class="query">
+
+
+        <form action="." method="POST" class="query-form">
+            {% csrf_token %}
+
+            {% if date_range %}
+                <input class="query-form__input query-form__input--selected" type="text" id="datepicker" name="datepicker" value="{{ date_range }}" placeholder="{{ date_range }}" autocomplete="off" >
+            {% else %}
+                <input class="query-form__input" type="text" id="datepicker" name="datepicker" value="" placeholder="First, select a date range..." autocomplete="off">
+            {% endif %}
+            <!-- JS and SCSS for the date range picker-->
+            <script>
+                const picker = new Litepicker({
+                    element: document.getElementById('datepicker'),
+                    singleMode: false,
+                });
+
+            </script>
+            <style>
+                :root {
+                    /* change background color for .container__months */
+                    --litepicker-is-start-color-bg: #7dbbb9 !important;
+                    --litepicker-is-end-color-bg: #7dbbb9 !important;
+                    --litepicker-is-in-range-color: rgba(213, 234, 232, 0.4) !important;
+                }
+            </style>
+            <!------------------------------------------>
+            <div class="dropdown">
+            {% if selected %}
+                <button class="dropdown__button dropdown__button--selected">{{ selected }}</button>
+            {% else %}
+                <button class="dropdown__button">Second, select a variable to query...</button>
+            {% endif %}
+                <div class="dropdown__content">
+                    {% for var in var_names %}
+                        <button name="var_names" value="{{ var }}" class="dropdown__item">{{ var }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+
+        {% if request.POST %}
+            {% include 'dashboard/query/display_page.html' with data=data %}
+        {% endif %}
+    </div>
+{% endblock %}
+

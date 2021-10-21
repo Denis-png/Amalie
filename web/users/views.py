@@ -9,25 +9,31 @@ from django.views import View
 
 class Register(View):
     def __init__(self):
-        self.signup = CreateUser()
+        self.ctx = {}
+        self.ctx['err'] = []
 
     def get(self, req):
-        return render(req, '../templates/authenticate/register_page.html', {'signup': self.signup})
+        return render(req, '../templates/authenticate/register_page.html', self.ctx)
 
     def post(self, req):
-        if req.method == 'POST':
-            form = CreateUser(req.POST)
-            if form.is_valid():
-                cd = form.cleaned_data
-                if cd['password1'] != cd['password2']:
-                    err = 'Sorry, passwords do not match'
-                    return render(req, '../templates/authenticate/register_page.html', {'signup': form, 'err': err})
-                else:
-                    new_user = CustomUser.objects.create_user(email=cd['email'], password=cd['password1'], first_name=cd['first_name'], last_name=cd['last_name'])
-                    login(req, new_user)
-                    return redirect('/query/select')
-            else:
-                return render(req, '../templates/authenticate/register_page.html', {'signup': form})
+        valid_password = True
+        self.ctx['user'] = {
+            'email': req.POST.get('email'),
+            'first_name': req.POST.get('first_name'),
+            'last_name': req.POST.get('last_name')
+        }
+        if req.POST.get('password1') != req.POST.get('password2'):
+            self.ctx['err'].append('Passwords do not match')
+            valid_password = False
+        if len(req.POST.get('password1')) < 8:
+            self.ctx['err'].append('Password must be at least 8 characters')
+            valid_password = False
+        if not valid_password:
+            return render(req, '../templates/authenticate/register_page.html', self.ctx)
+        new_user = CustomUser.objects.create_user(email=req.POST.get('email'), password=req.POST.get('password1'),
+                                                  first_name=req.POST.get('first_name'), last_name=req.POST.get('last_name'))
+        login(req, new_user)
+        return redirect('/')
 
 
 class Login(View):
@@ -36,7 +42,7 @@ class Login(View):
 
     def get(self, req):
         if req.user.is_authenticated:
-            return redirect('/home/')
+            return redirect('/')
         return render(req, '../templates/authenticate/login_page.html', {'signin': self.signin})
 
     def post(self, req):
@@ -47,7 +53,7 @@ class Login(View):
             to_login = authenticate(req, email=email, password=password)
             if to_login is not None:
                 login(req, to_login)
-                return redirect('/home/')
+                return redirect('/')
             else:
                 return render(req, '../templates/authenticate/login_page.html', {'signin': form})
 

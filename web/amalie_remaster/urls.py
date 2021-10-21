@@ -18,9 +18,6 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('query/', include('query.urls'), name='query'),
     path('auth/', include('users.urls'), name='users'),
-    path('dashboard/', include('dashboard.urls'), name='dashboard'),
-    path('home/', TemplateView.as_view(template_name='../templates/info/home_page.html'), name='home'), # Temporary
-    path('dash/', include('django_plotly_dash.urls')),
+    path('', include('dashboard.urls'), name='dashboard'),
 ]

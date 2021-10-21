@@ -1,27 +1,29 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 230px;">
-    <a href="{% url 'dashboard' %}" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-      <h5 class="text-center mt-2 ml-3" style="color: #2a5d68;">Dashboard</h5>
-    </a>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-          <a href="{% url 'sensors_dashboard' %}" class="nav-link">
-              Sensors
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'data_dashboard' %}" class="nav-link">
-            Data quality
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'history_dashboard' %}" class="nav-link">
-            History
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'admin_page' %}" class="nav-link">
+<div class="sidebar">
+    <div class="sidebar__item-list">
+        <a href="{% url 'dashboard' %}" class="sidebar__item">
+            <i class="fas fa-home fa-3x mb-2"></i>
+            <br>
+            Home
+        </a>
+        <a href="{% url 'query' %}" class="sidebar__item">
+            <i class="fas fa-database fa-3x mb-2"></i>
+            <br>
+            Query
+        </a>
+        <a href="{% url 'maintenance_sensor' %}" class="sidebar__item">
+            <i class="fas fa-tools fa-3x mb-2"></i>
+            <br>
+            Maintenance
+        </a>
+        <a href="{% url 'users' %}" class="sidebar__item">
+            <i class="fas fa-user-cog fa-3x mb-2"></i>
+            <br>
+            Users control
+        </a>
+        <a href="{% url 'admin_page' %}" class="sidebar__item">
+            <i class="fas fa-user-lock fa-3x mb-2"></i>
+            <br>
             Admin
-          </a>
-        </li>
-    </ul>
+        </a>
+    </div>
 </div>

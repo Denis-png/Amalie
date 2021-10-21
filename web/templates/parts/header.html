@@ -1,24 +1,25 @@
 {% load static %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'partitials/css/header.css'%}">
-    <link rel="stylesheet" href="{% static 'partitials/css/buttons.css'%}">
+    <link rel="stylesheet" href="{% static 'css/components/header.css'%}">
 {% endblock %}
 
-<header class="d-flex justify-content-center py-3">
-    <a href="{% url 'home' %}" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">Amalie</a>
-    <ul class="nav nav-pills">
-        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link">Home</a></li>
-        <li class="nav-item"><a href="{% url 'select' %}" class="nav-link">Query</a></li>
-        <li class="nav-item"><a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a></li>
-    </ul>
-    <div class="col-md-3 text-end">
-        {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}"><buttom class="btn custom-button">Log out</buttom></a>
-    {% else %}
-        <a href="{% url 'login' %}"><button class="btn custom-button me-2">Log in</button></a>
-        <a href="{% url 'register' %}"><button class="btn custom-button-static">Register</button></a>
+<header class="header">
+    {% if user.is_authenticated %}
+        <div class="header__logged-as">
+            Logged as {{ user.first_name }} {{ user.last_name }}
+        </div>
     {% endif %}
+    <div class="header__title">
+        Amalie
+    </div>
+    <div class="header__auth">
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="light-button light-button__logout">Log out</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="light-button">Log in</a>
+            <a href="{% url 'register' %}" class="dark-button dark-button__register">Register</a>
+        {% endif %}
     </div>
 </header>
 

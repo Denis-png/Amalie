@@ -1,0 +1,27 @@
+<form action="/maintenance/condition" method="post" class="condition-form">
+    {% csrf_token %}
+
+    <p class="condition-form__title">Condition form</p>
+
+    <input class="condition-form__input" type="text" id="start_date_time" name="start_date_time" value="" placeholder="Start date and time...">
+
+    <input class="condition-form__input" type="text" id="end_date_time" name="end_date_time" value="" placeholder="End date and time...">
+
+    <input class="condition-form__input" type="text" name="condition" placeholder="Condition...">
+
+    <input class="condition-form__input" type="text" name="note" placeholder="Note...">
+
+    <button type="submit" class="light-button">Submit</button>
+</form>
+<script>
+    flatpickr('#start_date_time', {
+        enableTime: true,
+        time_24hr: true,
+        enableSeconds: true,
+    })
+    flatpickr('#end_date_time', {
+        enableTime: true,
+        time_24hr: true,
+        enableSeconds: true,
+    })
+</script>

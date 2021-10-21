@@ -1,0 +1,86 @@
+<div class="table-query">
+    <table class="table-query__parent">
+        <thead class="table-query__head">
+        <tr>
+            <td>sensor_id</td>
+            <td>date</td>
+            <td>time</td>
+            <td>value</td>
+            <td>signal</td>
+            <td>variable_id</td>
+        </tr>
+        </thead>
+        <tbody class="table-query__body">
+        {% for row in data %}
+            <tr>
+                <td>{{ row.sensor_id }}</td>
+                <td>{{ row.date }}</td>
+                <td>{{ row.time }}</td>
+                <td>{{ row.value }}</td>
+                <td>{{ row.signal }}</td>
+                <td>{{ row.variable_id }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<form method="post" action="/query/save/" class="query-save ">
+    {% csrf_token %}
+    <div class="dropdown">
+        <button class="dropdown__button">Export selected data as...</button>
+        <div class="dropdown__content">
+            <button type="submit" name="save_format" value="csv" class="dropdown__item">CSV</button>
+            <button type="submit" name="save_format" value="json" class="dropdown__item">JSON</button>
+        </div>
+    </div>
+</form>
+
+<div class="plot-query">
+    <canvas id="myChart"></canvas>
+    <script>
+        let x = [
+            {% for row in data %}
+                '{{ row.date }}',
+            {% endfor %}
+        ]
+        let y = [
+            {% for row in data %}
+                '{{ row.value }}',
+            {% endfor %}
+        ]
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: x,
+                datasets: [{
+                    label: '{{ table }}',
+                    data: y,
+                }]
+            },
+            options: {
+                plugins: {
+                    zoom: {
+                        pan: {
+                            enabled: true
+                        },
+                        zoom: {
+                            wheel: {
+                                enabled: true,
+                            },
+                            pinch: {
+                                enabled: true
+                            },
+                            mode: 'xy',
+                        }
+                    },
+                }
+            }
+        });
+
+    </script>
+</div>
+

@@ -1,19 +1,15 @@
 {% extends 'base.html' %}
-
-
+{% load static %}
 
 {% block title %}
     Dashboard
 {% endblock %}
 
 {% block content %}
-    <div class="row">
+    <section class="dashboard">
         {% include 'parts/sidebar.html' %}
-        <div class="col">
-            {% block dashboard-content %}
-                <h1 class="text-center mt-5" style="color: #7dbbb9;">Dashboard</h1>
-            {% endblock %}
-        </div>
-    </div>
-
+        {% block dashboard-content %}
+            <h1 class="text-center mt-5">Dashboard</h1>
+        {% endblock %}
+    </section>
 {% endblock %}

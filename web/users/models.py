@@ -33,7 +33,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.first_name
+        return self.email
 
     def has_perm(self, obj=None):
         return self.is_admin
