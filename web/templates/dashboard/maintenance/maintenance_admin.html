@@ -2,10 +2,12 @@
     {% csrf_token %}
     <p class="admin-form__title">Admin maintenance form</p>
     <div class="dropdown mb-3">
-        <button class="dropdown__button">Select an action to remove...<i class="fas fa-chevron-circle-down"></i></button>
-        <div class="dropdown__content">
+
+        <button class="dropdown__button" id="actions_button_admin" type="button" onclick="openDropdown('action-dropdown')">Action to remove...<i class="fas fa-chevron-circle-down" aria-hidden="true"></i></button>
+        <div class="dropdown__content" id="action-dropdown">
+
             {% for action in actions %}
-                <button type="submit" name="to_remove" class="dropdown__item" value="{{ action.value }}">{{ action.label }}</button>
+                <button type="submit" name="to_remove" class="dropdown__item" value="{{ action.value }}" onclick="closeDropdown('action-dropdown')">{{ action.label }}</button>
             {% endfor %}
         </div>
     </div>

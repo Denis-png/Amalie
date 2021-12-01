@@ -38,10 +38,10 @@ class DataDB:
             return temp
 
     # Method for inserting rows into datatable(should be used with get_actual() to avoid duplications)
-    def insert_rows(self, tables: dict, row: tuple):
+    def insert_rows(self, table, row: tuple):
         if self.conn:
-            query = "INSERT INTO global.\"%s\"(sensor_id,date,time,value,signal,variable_id) " \
-                    "VALUES(%%s,%%s,%%s,%%s,%%s,%%s)" % tables
+            query = "INSERT INTO global.\"%s\"(sensor_id,date,time,value,variable_id) " \
+                    "VALUES(%%s,%%s,%%s,%%s,%%s)" % table
             cursor = self.conn.cursor()
             cursor.execute(query,row)
             self.conn.commit()
@@ -87,5 +87,26 @@ class DataDB:
             variable_id = cursor.fetchone()
             cursor.close()
             return int(variable_id[0])
+
+    def get_variable_by_company(self, company):
+        if self.conn:
+            cursor = self.conn.cursor()
+            cursor.execute(
+                f'SELECT variable_id FROM global."variables" WHERE note=\'{company}\';')
+            rows = cursor.fetchall()
+            cursor.close()
+            return rows
+
+    def get_recent_by_variable(self, table, variable):
+        if self.conn:
+            cursor = self.conn.cursor()
+            variable_id = self.get_variable_id(variable)
+            cursor.execute(
+                f'SELECT DISTINCT ON (variable_id) date, time FROM global."{table}" WHERE variable_id={variable_id} ORDER BY variable_id, date DESC, time DESC;')
+
+            rows = cursor.fetchone()
+            cursor.close()
+            return rows
+
 
 

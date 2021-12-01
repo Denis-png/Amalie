@@ -1,0 +1,58 @@
+<div class="home-main__charts">
+    <div class="home-main__charts_1">
+        <div id="{{ com }}-err" class="home-main__chart">
+            Errors:
+        </div>
+
+        <div id="{{ com }}-dup" class="home-main__chart">
+            Duplicates:
+        </div>
+
+        <div id="{{ com }}-nas" class="home-main__chart">
+            NA's:
+        </div>
+    </div>
+    <div class="home-main__charts_2">
+        <div id="{{ com }}-daterange" class="home-main__chart"></div>
+
+        <div id="{{ com }}-rows" class="home-main__chart"></div>
+
+        <div id="{{ com }}-nabyvar" class="home-main__chart"></div>
+    </div>
+</div>
+
+{##}
+{#        <script>#}
+{#            $.post('/charts/', { csrfmiddlewaretoken: '{{ csrf_token }}', company: '{{ com }}'}, function (data, status) {#}
+{#                let company = '{{ com }}'#}
+{#                // create date obj from str#}
+{##}
+{#                for (let sensor in data.daterange) {#}
+{#                    data.daterange[sensor].forEach(row => row[0] = new Date(row[0]))#}
+{#                }#}
+{##}
+{#                anychart.onDocumentReady(function () {#}
+{#                    // create an instance of a pie chart#}
+{#                    let chart = anychart.line();#}
+{#                    // set the data#}
+{#                    //let series = chart.line(data.daterange)#}
+{#                    for (let sensor in data.daterange) {#}
+{#                        chart.addSeries(data.daterange[sensor])#}
+{#                    }#}
+{#                    // set chart title#}
+{#                    chart.title("Date range by sensor")#}
+{#                    chart.title().fontColor('#276678');#}
+{##}
+{##}
+{#                    chart.yAxis().labels().fontSize('.8rem')#}
+{##}
+{#                    chart.yScale(anychart.scales.dateTime());#}
+{##}
+{#                    // set the container element#}
+{#                    chart.container(company + "-daterange");#}
+{#                    // initiate chart display#}
+{#                    chart.draw();#}
+{#                });#}
+{#            })#}
+{##}
+{#        </script>#}

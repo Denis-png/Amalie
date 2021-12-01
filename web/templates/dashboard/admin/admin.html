@@ -1,0 +1,48 @@
+{% extends "dashboard/global.html" %}
+
+{% load static %}
+
+{% block title %}
+    Admin
+{% endblock %}
+
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/components/dropdowns.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/table.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.11.3/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.11.3/datatables.min.js"></script>
+{% endblock %}
+
+{% block dashboard-content %}
+    <div class="admin">
+        {% include 'dashboard/admin/add_company_form.html' %}
+
+        <div class="table-admin">
+            <table id="test">
+                <thead>
+                <tr>
+                    {% for col in head %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in data %}
+                    <tr>
+                        {% for col in row.values %}
+                            <td>{{ col }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <script>
+                $(document).ready(function() {
+                    $('#test').DataTable();
+                } );
+            </script>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,32 +1,38 @@
 <form action="/maintenance/add_new" method="post" class="maintenance-form">
     {% csrf_token %}
+
     <p class="maintenance-form__title">Maintenance form</p>
+    <div class="form__box">
+        <input type="text" id="date_time" name="date_time" placeholder="Select date and time..." class="maintenance-form__input">
 
-    <input type="text" id="date_time" name="date_time" placeholder="Select date and time..." class="maintenance-form__input">
 
-    <input type="hidden" name="actions" id="actions">
-    <div class="dropdown w-25 mb-3">
-        <button type="button" class="dropdown__button" id="actions_button">Select an action...<i class="fas fa-chevron-circle-down"></i></button>
-        <div class="dropdown__content">
-            {% for action in actions %}
-                <button type="button" class="dropdown__item" onclick="select(x=['{{ action.value }}', this.textContent])">{{ action.label }}</button>
-            {% endfor %}
+        <input type="hidden" name="actions" id="actions">
+        <div class="dropdown mb-3">
+            <button class="dropdown__button" id="actions_button" type="button" onclick="openDropdown('action-list-dropdown')">Select an action...<i class="fas fa-chevron-circle-down" aria-hidden="true"></i></button>
+            <div class="dropdown__content" id="action-list-dropdown">
+                {% for action in actions %}
+                    <button type="button" class="dropdown__item" onclick="select(x=['{{ action.value }}', this.textContent])">{{ action.label }}</button>
+                {% endfor %}
+            </div>
+
         </div>
+        <script>
+            function select(x) {
+                $(document).ready(function () {
+                    let d = document.getElementById('actions')
+                    let b = document.getElementById('actions_button')
+                    b.style.textAlign = 'center'
+                    d.value = x[0]
+                    $('button#actions_button').text(x[1])
+                    closeDropdown('action-list-dropdown')
+                })
+
+            }
+        </script>
+
+        <input type="text" name="note" class="maintenance-form__input" placeholder="Note...">
+
     </div>
-    <script>
-        function select(x) {
-            $(document).ready(function () {
-                let d = document.getElementById('actions')
-                let b = document.getElementById('actions_button')
-                b.style.textAlign = 'center'
-                d.value = x[0]
-                $('button#actions_button').text(x[1])
-            })
-        }
-    </script>
-
-    <input type="text" name="note" class="maintenance-form__input" placeholder="Note...">
-
     <button type="submit" class="light-button">Submit</button>
 </form>
 <script>

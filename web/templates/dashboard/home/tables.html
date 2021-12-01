@@ -1,0 +1,32 @@
+<div class="home-main__tables">
+    <div class="home-main__tables-nav">
+        {% for tab in info_tables %}
+            <a href="#">{{ tab }}</a>
+        {% endfor %}
+    </div>
+    <div class="home-main__table">
+        <table id="test">
+            <thead>
+            <tr>
+                {% for col in head %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in data %}
+                <tr>
+                    {% for col in row.values %}
+                        <td>{{ col }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <script>
+            $(document).ready(function() {
+                $('#test').DataTable();
+            } );
+        </script>
+    </div>
+</div>
