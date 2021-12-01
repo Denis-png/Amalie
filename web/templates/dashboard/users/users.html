@@ -1,0 +1,26 @@
+{% extends "dashboard/global.html" %}
+
+{% load static %}
+
+{% block title %}Query{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/components/users_forms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/dropdowns.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/table.css' %}">
+{% endblock %}
+
+
+{% block dashboard-content %}
+    <div class="users">
+        <div class="users-modify">
+            <button class="light-button">Add</button>
+            <button class="dark-button">Remove</button>
+        </div>
+        <ul class="users-list">
+            {% for p in people %}
+                <li><button class="light-button mt-2">{{ p.first_name }} {{ p.last_name }}</button></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

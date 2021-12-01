@@ -1,7 +1,7 @@
 import json
 import csv
 from datetime import datetime, date
-
+import pandas as pd
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.serializers.json import DjangoJSONEncoder
@@ -14,6 +14,11 @@ from django.views import View
 from .forms import *
 from .models import *
 from users.models import CustomUser
+import sys
+sys.path.append('/home/denis-png/Projects/Amalie/')
+from python_scripts.Database.DB_Tools import DatabaseTools
+from python_scripts.Logger.Logger import Logger
+from python_scripts.Web_Module.Home import Home
 
 
 # DASHBOARD HOME VIEW
@@ -23,13 +28,47 @@ class DashboardView(View):
 
     def get(self, req):
         if req.user.is_authenticated:
-            return render(req, '../templates/dashboard/global.html', {})
+            self.ctx['companies'] = [x.__name__[4:] for x in apps.get_app_config('dashboard').get_models() if
+                              'Data' in x.__name__]
+
+            self.ctx['info_tables'] = [x.__name__ for x in apps.get_app_config('dashboard').get_models() if
+                                     'Data' not in x.__name__ and 'data' not in x.__name__]
+
+            self.ctx['data'] = list(Sensors.objects.all().using('global').values())
+            self.ctx['head'] = [x for x in self.ctx['data'][0].keys()]
+
+            return render(req, '../templates/dashboard/home/dashboard.html', self.ctx)
         return redirect('login')
 
     @method_decorator(login_required)
     def post(self, req):
         pass
 
+
+def catch_err(req):
+    res = {}
+
+    company = req.POST.get('company')
+    table = 'data_' + company
+
+    log = Logger()
+    res['err'] = log.get_log(company)
+
+    db_tools = DatabaseTools()
+    res['dup'] = db_tools.find_duplicates(table)
+
+    res = HttpResponse(json.dumps(res), content_type='application/json')
+    return res
+
+
+def charts(req):
+    data = {}
+    company = req.POST.get('company')
+    table = 'data_' + company
+    home = Home(table)
+    data['daterange'] = home.daterange_data()
+
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 decorators = [login_required, tech_required]
 
@@ -57,11 +96,30 @@ class QueryView(View):
         for var in self.data_variables:
             if req.POST.get('var_names') == var.__name__.split('_')[1]:
                 self.ctx['selected'] = var.__name__.split('_')[1]
-                to_plot = {'x': [], 'y': []}
                 try:
                     data = var.objects.filter(date__gt=date_range[0], date__lt=date_range[1]).using('global')
                 except:
                     data = var.objects.all().using('global')
+
+                # Creating labels for chart
+                self.ctx['plot_labels'] = ["Date"]
+                self.ctx['plot_data'] = []
+
+                df = pd.DataFrame(list(data.values()))
+                to_plot = pd.DataFrame(columns=['date', 'value', 'variable'])
+                to_plot['date'] = df.date.astype(str) + 'T' + df.time.astype(str)
+                to_plot['value'] = df.value
+                to_plot['variable'] = df.variable_id
+                df_cast = to_plot.pivot_table(index='date', columns=['variable'], values='value')
+                df_cast['date'] = df_cast.index
+                for i, row in df_cast.iterrows():
+                    plot_row = [row['date']]
+                    for var_id in df.variable_id.unique():
+                        if var_id not in self.ctx['plot_labels']:
+                            self.ctx['plot_labels'].append(var_id)
+                        plot_row.append(row[var_id])
+                    self.ctx['plot_data'].append(plot_row)
+
 
                 req.session['data'] = json.dumps(list(data.values()), cls=DjangoJSONEncoder)
                 self.ctx['table'] = var.__name__.split('_')[1]
@@ -108,7 +166,6 @@ class MaintenanceView(View):
 
 
 def maintenance(req):
-    print(req.POST)
     user = req.user
     user_id = People.objects.using('global').get(email=user).id
     date = req.POST.get('date_time').split(' ')[0]
@@ -125,7 +182,6 @@ def maintenance(req):
 
 
 def update_actions(req):
-    print(req.POST)
     if req.POST.get('to_remove'):
         to_remove = req.POST.get('to_remove')
         Maintenanceactions.objects.filter(label=to_remove).using('global').delete()
@@ -137,7 +193,6 @@ def update_actions(req):
 
 
 def condition(req):
-    print(req.POST)
     start_date = req.POST.get('start_date_time').split(' ')[0]
     start_time = req.POST.get('end_date_time').split(' ')[1]
     end_date = req.POST.get('start_date_time').split(' ')[0]
@@ -151,17 +206,16 @@ def condition(req):
 
     return redirect('/maintenance/')
 
+
 # USERS VIEW
 class UsersView(View):
     def __init__(self):
         self.ctx = {}
-        self.sensor = SelectSensor()
-        self.table = Sensors.objects.all().using('global')
+        self.ctx['people'] = People.objects.all().using('global')
 
     def get(self, req):
-        table = self.table
-        return render(req, '../templates/dashboard/history.html',
-                      {'data': table.values(), 'select_sensor': self.sensor})
+
+        return render(req, '../templates/dashboard/users/users.html', self.ctx)
 
     def post(self, req):
         pass
@@ -187,46 +241,24 @@ class MapsView(View):
 class AdminView(View):
     def __init__(self):
         self.ctx = {}
-        self.action_form = AddAction()
-        self.person_form = AddPerson()
-        self.action_list = list(Maintenanceactions.objects.all().using('global').values_list('label', 'value'))
-        self.sensor_list = list(Sensors.objects.all().using('global'))
+
 
     def get(self, req):
-        return render(req, 'dashboard/admin.html', {'action_form': self.action_form, 'action_list': self.action_list,
-                                                    'sensor_list': self.sensor_list, 'person_form': self.person_form})
+        self.ctx['data'] = list(Sensors.objects.all().using('global').values())
+        self.ctx['head'] = [x for x in self.ctx['data'][0].keys()]
+        return render(req, '../templates/dashboard/admin/admin.html', self.ctx)
 
     def post(self, req):
-        if 'add_action' in req.POST:
-            action_form = AddAction(req.POST)
-            if action_form.is_valid():
-                cd = action_form.cleaned_data
-                action = Maintenanceactions(label=cd['action'], value=cd['action'])
-                action.save(using='global')
-                self.action_list = list(Maintenanceactions.objects.all().using('global').values_list('label', 'value'))
-                return render(req, 'dashboard/admin.html',
-                              {'action_form': self.action_form, 'action_list': self.action_list,
-                               'sensor_list': self.sensor_list})
-        elif 'remove_action' in req.POST:
-            to_remove = req.POST['remove_action']
-            print(to_remove)
-            Maintenanceactions.objects.filter(label=to_remove).using('global').delete()
-            self.action_list = list(Maintenanceactions.objects.all().using('global').values_list('label', 'value'))
-            return render(req, 'dashboard/admin.html',
-                          {'action_form': self.action_form, 'action_list': self.action_list,
-                           'sensor_list': self.sensor_list})
-        elif 'add_person' in req.POST:
-            person_form = AddPerson(req.POST)
-            if person_form.is_valid():
-                cd = person_form.cleaned_data
-                person = People(first_name=cd['first_name'], last_name=cd['last_name'], email=cd['email'],
-                                technician_czu=cd['technician_czu'], technician_company=cd['technician_company'],
-                                sensor_type_id=int(cd['sensor_type'][0]))
-                person.save(using='global')
-                return render(req, 'dashboard/admin.html',
-                              {'action_form': self.action_form, 'action_list': self.action_list,
-                               'sensor_list': self.sensor_list, 'person_form': self.person_form})
-
-        return render(req, 'dashboard/admin.html',
+        return render(req, '../templates/dashboard/admin/admin.html',
                       {'action_form': self.action_form, 'action_list': self.action_list,
                        'sensor_list': self.sensor_list, 'person_form': self.person_form})
+
+
+def add_company(req):
+    db_design = DatabaseTools()
+    company_name = req.POST.get('company_name')
+    db_design.add_company(company_name)
+
+    return redirect('/admin/')
+
+

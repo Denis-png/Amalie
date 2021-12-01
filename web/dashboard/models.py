@@ -295,3 +295,63 @@ class data_WindSpeed(models.Model):
     class Meta:
         managed = False
         db_table = 'WIND_SPEED'
+
+
+class DataCleverfarm(models.Model):
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+    value = models.FloatField(blank=True, null=True)
+    sensor = models.ForeignKey('Sensors', models.DO_NOTHING, blank=True, null=True)
+    variable = models.ForeignKey('Variables', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'data_Cleverfarm'
+
+
+class DataEmsbrno(models.Model):
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+    value = models.FloatField(blank=True, null=True)
+    sensor = models.ForeignKey('Sensors', models.DO_NOTHING, blank=True, null=True)
+    variable = models.ForeignKey('Variables', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'data_EMSBrno'
+
+
+class DataEkotechnika(models.Model):
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+    value = models.FloatField(blank=True, null=True)
+    sensor = models.ForeignKey('Sensors', models.DO_NOTHING, blank=True, null=True)
+    variable = models.ForeignKey('Variables', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'data_Ekotechnika'
+
+
+class DataTomst(models.Model):
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+    value = models.FloatField(blank=True, null=True)
+    sensor = models.ForeignKey('Sensors', models.DO_NOTHING, blank=True, null=True)
+    variable = models.ForeignKey('Variables', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'data_Tomst'
+
+
+class DataVrty(models.Model):
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+    value = models.FloatField(blank=True, null=True)
+    sensor = models.ForeignKey('Sensors', models.DO_NOTHING, blank=True, null=True)
+    variable = models.ForeignKey('Variables', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'data_Vrty'

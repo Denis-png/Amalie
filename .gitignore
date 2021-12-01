@@ -1,6 +1,7 @@
 web/staticfiles
 web/amalie_remaster/static
 web/amalie_remaster/.env
+web/amalie_remaster/settings.py
 trashbin
 amalie_venv
 python_scripts/.env

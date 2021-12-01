@@ -5,6 +5,8 @@ from .views import *
 urlpatterns = [
     # GENERAL PATH
     path('', DashboardView.as_view(), name='dashboard'),
+    path('logs/', catch_err, name='dashboard-logs'),
+    path('charts/', charts, name='dashboard-charts'),
 
     # QUERY URLS
     path('query/', QueryView.as_view(), name='query'),
@@ -22,4 +24,5 @@ urlpatterns = [
 
     # ADMIN PAGE URL
     path('admin/', AdminView.as_view(), name='admin_page'),
+    path('admin/add_company', add_company, name='admin_add_company'),
 ]

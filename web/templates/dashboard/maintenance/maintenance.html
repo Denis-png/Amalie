@@ -22,34 +22,39 @@
                 {% if request.session.sensor %}
                     {% for sensor in sensors %}
                         {% if sensor.id == request.session.sensor|to_int_json %}
-                            <button class="dropdown__button dropdown__button--selected">{{ sensor.sensor_name }}</button>
+                            <button class="dropdown__button" onclick="openDropdown('maintenance-sensor-dropdown')" type="button">{{ sensor.sensor_name }}<i class="fas fa-chevron-circle-down" aria-hidden="true"></i></button>
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    <button class="dropdown__button">Select a sensor to maintain...</button>
+                    <button class="dropdown__button" onclick="openDropdown('maintenance-sensor-dropdown')" type="button">Select a sensor to maintain...<i class="fas fa-chevron-circle-down" aria-hidden="true"></i></button>
                 {% endif %}
-                <div class="dropdown__content">
+                <div class="dropdown__content" id="maintenance-sensor-dropdown">
                     {% for sensor in sensors %}
-                        <button name="sensor" id="sensor" value="{{ sensor.id }}" class="dropdown__item">{{ sensor.sensor_name }}</button>
+                        <button name="sensor" type="submit" value="{{ sensor.id }}" class="dropdown__item" onclick="closeDropdown('maintenance-sensor-dropdown')">{{ sensor.sensor_name }}</button>
                     {% endfor %}
 
                 </div>
             </div>
             <script>
-                $(document).ready(function () {
-                    $('#sensor').change(function () {
-                        $(this).closest('form').submit();
-                    });
-                })
+                {#$(document).ready(function () {#}
+                {#    $('#sensor').change(function () {#}
+                {#        $(this).closest('form').submit();#}
+                {#    });#}
+                {#)#}
             </script>
         </form>
+        {% if request.session.sensor %}
+            {% include 'dashboard/maintenance/maintenance_form.html' with actions=actions%}
 
-        {% include 'dashboard/maintenance/maintenance_form.html' with actions=actions%}
+            {% include 'dashboard/maintenance/condition_form.html' %}
 
-        {% include 'dashboard/maintenance/condition_form.html' %}
-
-        {% if user.is_technician %}
-            {% include 'dashboard/maintenance/maintenance_admin.html' %}
+            {% if user.is_technician %}
+                {% include 'dashboard/maintenance/maintenance_admin.html' %}
+            {% endif %}
+        {% else %}
+            <p class="maintenance__sensor">Select sensor first! <i class="fas fa-level-up-alt"></i></p>
         {% endif %}
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 {% endblock %}

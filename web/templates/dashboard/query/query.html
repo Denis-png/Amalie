@@ -10,9 +10,8 @@
     <link rel="stylesheet" href="{% static 'css/components/table.css' %}">
     <link rel="stylesheet" href="{% static 'css/components/plots.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.1.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="{% static 'js/dygraph.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/dygraph.css' %}" />
 {% endblock %}
 
 
@@ -48,18 +47,17 @@
             <!------------------------------------------>
             <div class="dropdown">
             {% if selected %}
-                <button class="dropdown__button dropdown__button--selected">{{ selected }}</button>
+                <button class="dropdown__button" onclick="openDropdown('query-dropdown')" type="button">{{ selected }}</button>
             {% else %}
-                <button class="dropdown__button">Second, select a variable to query...</button>
+                <button class="dropdown__button" type="button" onclick="openDropdown('query-dropdown')" >Second, select a variable to query...</button>
             {% endif %}
-                <div class="dropdown__content">
+                <div class="dropdown__content" id="query-dropdown">
                     {% for var in var_names %}
-                        <button name="var_names" value="{{ var }}" class="dropdown__item">{{ var }}</button>
+                        <button name="var_names" value="{{ var }}" class="dropdown__item" onclick="closeDropdown('query-dropdown')" type="submit">{{ var }}</button>
                     {% endfor %}
                 </div>
             </div>
         </form>
-
         {% if request.POST %}
             {% include 'dashboard/query/display_page.html' with data=data %}
         {% endif %}
