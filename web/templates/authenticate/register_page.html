@@ -21,7 +21,7 @@
         <ul class="auth-form__errors">
             {% if err %}
                 {% for error in err %}
-                    <li>! {{ error }}</li>
+                    <li><i class="fas fa-exclamation-circle"></i> {{ error }}</li>
                 {% endfor %}
             {% endif %}
         </ul>

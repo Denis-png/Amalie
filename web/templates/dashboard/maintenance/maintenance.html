@@ -22,11 +22,11 @@
                 {% if request.session.sensor %}
                     {% for sensor in sensors %}
                         {% if sensor.id == request.session.sensor|to_int_json %}
-                            <button class="dropdown__button dropdown__button--selected">{{ sensor.sensor_name }}</button>
+                            <button class="dropdown__button dropdown__button--selected">{{ sensor.sensor_name }}<i class="fas fa-chevron-circle-down"></i></button>
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    <button class="dropdown__button">Select a sensor to maintain...</button>
+                    <button class="dropdown__button">Select a sensor to maintain...<i class="fas fa-chevron-circle-down"></i></button>
                 {% endif %}
                 <div class="dropdown__content">
                     {% for sensor in sensors %}

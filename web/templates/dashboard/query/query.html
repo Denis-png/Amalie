@@ -48,9 +48,9 @@
             <!------------------------------------------>
             <div class="dropdown">
             {% if selected %}
-                <button class="dropdown__button dropdown__button--selected">{{ selected }}</button>
+                <button class="dropdown__button dropdown__button--selected">{{ selected }} <i class="fas fa-chevron-circle-down"></i></button>
             {% else %}
-                <button class="dropdown__button">Second, select a variable to query...</button>
+                <button class="dropdown__button">Second, select a variable to query...<i class="fas fa-chevron-circle-down "></i></button>
             {% endif %}
                 <div class="dropdown__content">
                     {% for var in var_names %}

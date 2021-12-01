@@ -29,7 +29,7 @@
 <form method="post" action="/query/save/" class="query-save ">
     {% csrf_token %}
     <div class="dropdown">
-        <button class="dropdown__button">Export selected data as...</button>
+        <button class="dropdown__button">Export selected data as...<i class="fas fa-chevron-circle-down"></i></button>
         <div class="dropdown__content">
             <button type="submit" name="save_format" value="csv" class="dropdown__item">CSV</button>
             <button type="submit" name="save_format" value="json" class="dropdown__item">JSON</button>

@@ -6,7 +6,7 @@
 
     <input type="hidden" name="actions" id="actions">
     <div class="dropdown w-25 mb-3">
-        <button class="dropdown__button" id="actions_button">Select an action...</button>
+        <button type="button" class="dropdown__button" id="actions_button">Select an action...<i class="fas fa-chevron-circle-down"></i></button>
         <div class="dropdown__content">
             {% for action in actions %}
                 <button type="button" class="dropdown__item" onclick="select(x=['{{ action.value }}', this.textContent])">{{ action.label }}</button>

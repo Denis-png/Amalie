@@ -1,4 +1,4 @@
-from python_scripts.Tomst.Tomst import Tomst
+from Tomst import Tomst
 import time
 import pandas as pd
 from os import listdir
