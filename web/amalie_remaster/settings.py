@@ -14,6 +14,8 @@ import os
 from dotenv import dotenv_values
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from pathlib import Path
+import sys
+sys.path.append('/home/eds/Current/Amalie/')
 
 # Load environment variables
 env = dotenv_values()
