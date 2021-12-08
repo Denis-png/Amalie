@@ -41,9 +41,9 @@ for table in data.keys():
 
     # Check for duplicates and insert/update new values
     for row in rows:
-        if (row[0], row[1], row[2]) not in actual:
+        if (row[0], row[1], row[2], row[4]) not in actual:
             db.insert_rows(db_table, row)
-        elif ((row[0], row[1], row[2]) in nan) \
+        elif ((row[0], row[1], row[2], row[4]) in nan) \
                 & (not pd.isna(row[3])):
             db.update_nan(db_table, row[::-1])
             print('Updated record in {}/{} with {}'.format(db_table, row[4], row[3]))

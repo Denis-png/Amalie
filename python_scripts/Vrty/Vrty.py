@@ -4,6 +4,9 @@ import pandas as pd
 from dotenv import dotenv_values
 from datetime import datetime, timedelta
 
+import sys
+sys.path.append('/home/eds/Current/Amalie/')
+
 from python_scripts.Database.Database import DataDB
 
 

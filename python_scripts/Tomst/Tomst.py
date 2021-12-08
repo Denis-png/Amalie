@@ -2,6 +2,9 @@ import pandas as pd
 from datetime import datetime
 from os import listdir, replace, path, mkdir
 
+import sys
+sys.path.append('/home/eds/Current/Amalie/')
+
 from python_scripts.Database.Database import DataDB
 
 class Tomst:
@@ -81,11 +84,11 @@ class Tomst:
         self.temp['variable_id'] = variable_id
 
         try:
-            replace(path.abspath(self.path), path.abspath('files_collected')+'/Processed_on_{}'.format(datetime.now().date())+'/'+self.current_file)
+            replace(self.path, '/home/eds/Current/Amalie/python_scripts/Tomst/files_collected'+'/Processed_on_{}'.format(datetime.now().date())+'/'+self.current_file)
         except FileNotFoundError:
             print('Creating a new directory at files_collected/...')
-            mkdir(path.abspath('files_collected')+'/Processed_on_{}'.format(datetime.now().date()))
-            replace(path.abspath(self.path), path.abspath('files_collected')+'/Processed_on_{}'.format(datetime.now().date())+'/'+self.current_file)
+            mkdir('/home/eds/Current/Amalie/python_scripts/Tomst/files_collected'+'/Processed_on_{}'.format(datetime.now().date()))
+            replace(self.path, '/home/eds/Current/Amalie/python_scripts/Tomst/files_collected'+'/Processed_on_{}'.format(datetime.now().date())+'/'+self.current_file)
 
         print('Moved {} to the /files_collected/Processed_on_{}'.format(self.current_file, datetime.now().date()))
 

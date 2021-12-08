@@ -22,7 +22,7 @@ class DataDB:
     def get_nan(self, table: str):
         if self.conn:
             cursor = self.conn.cursor()
-            cursor.execute("SELECT sensor_id,date,time FROM global.\"%s\" WHERE value = double precision 'NaN'" % table)
+            cursor.execute("SELECT sensor_id,date,time,variable_id FROM global.\"%s\" WHERE value = double precision 'NaN'" % table)
             temp = cursor.fetchall()
             cursor.close()
             return temp
@@ -31,7 +31,7 @@ class DataDB:
     def get_actual(self, table: str, date_range: list):
         if self.conn:
             cursor = self.conn.cursor()
-            cursor.execute("SELECT sensor_id,date,time FROM global.\"%s\" WHERE date >= '%s' AND date <= '%s'" % (
+            cursor.execute("SELECT sensor_id,date,time,variable_id FROM global.\"%s\" WHERE date >= '%s' AND date <= '%s'" % (
             table, date_range[0], date_range[1]))
             temp = cursor.fetchall()
             cursor.close()
@@ -50,7 +50,7 @@ class DataDB:
     # Method for updating NaN values if new received are not NaN
     def update_nan(self, tables: dict, row: tuple):
         if self.conn:
-            query = "UPDATE global.\"%s\" SET variable_id = %%s, signal = %%s, value = %%s " \
+            query = "UPDATE global.\"%s\" SET variable_id = %%s, value = %%s " \
                     "WHERE time = %%s AND date = %%s AND sensor_id = %%s" \
                     "AND value = double precision 'NaN'" % tables
             cursor = self.conn.cursor()

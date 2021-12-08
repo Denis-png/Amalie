@@ -4,6 +4,10 @@ import sys
 import requests
 import time
 import pandas as pd
+
+import sys
+sys.path.append('/home/eds/Current/Amalie/')
+
 from python_scripts.Database.Database import DataDB
 from python_scripts.Logger.Logger import Logger
 
@@ -33,9 +37,9 @@ if data.size > 0:
 
     # Check for duplicates and insert/update new values
     for row in rows:
-        if (row[0], row[1], row[2]) not in actual:
+        if (row[0], row[1], row[2], row[4]) not in actual:
             db.insert_rows(table, row)
-        elif ((row[0], row[1], row[2]) in nan) \
+        elif ((row[0], row[1], row[2], row[4]) in nan) \
                 & (not pd.isna(row[3])):
             db.update_nan(table, row[::-1])
             print('Updated record in {} with {}'.format(table, row[3]))

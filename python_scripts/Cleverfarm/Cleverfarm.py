@@ -3,6 +3,10 @@ import pandas as pd
 import requests
 from dotenv import dotenv_values, load_dotenv
 from datetime import datetime
+
+import sys
+sys.path.append('/home/eds/Current/Amalie/')
+
 from python_scripts.Database.Database import DataDB
 
 # Getting environment variables
