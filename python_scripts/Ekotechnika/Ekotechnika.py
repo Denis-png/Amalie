@@ -1,8 +1,9 @@
 import requests
 import pandas as pd
 from dotenv import dotenv_values
-from datetime import datetime
+from datetime import datetime, timedelta
 
+from python_scripts.Database.Database import DataDB
 # Getting environment variables
 env = dotenv_values()
 
@@ -17,6 +18,8 @@ class Ekotechnika:
             'logPass': env['PASSWORD'],
         }
         self.variables = {}
+        self.db = DataDB()
+
 
     def sensors_vars(self):
         stations = requests.request("GET", self.stations_url, params=self.auth)
@@ -30,12 +33,15 @@ class Ekotechnika:
 
         return self.variables
 
-    def get_data(self, date_from: str, date_to: str):
-        result = {}
-        for station_id, variables in self.variables.items():
+    def get_data(self, date_to):
+        date_from = date_to - timedelta(days=1)
+        date_to, date_from = date_to.strftime("%Y%m%d"), date_from.strftime("%Y%m%d")
+        df = pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'variable_id'])
+        for station_id in self.variables:
             url = self.data_url.format(self.auth['logName'], self.auth['logPass'], station_id, date_from, date_to)
             data = requests.request("GET", url)
-            result[str(station_id)] = []
+
+            sensor_id = self.db.get_sensor_id_by_serial(station_id)
             for record in data.json()['mdataData']:
 
                 # Processing date and time
@@ -45,16 +51,22 @@ class Ekotechnika:
                 date = datetime.strptime(date_str, '%Y%m%d').date()
                 time = datetime.strptime(time_str, '%H:%M:%S').time()
 
-                # Variables and values
-                for variable in variables:
-                    for value in record[1]:
-                        if variable.keys() == value.keys():
-                            result[str(station_id)].append({
-                                list(variable.values())[0]: list(value.values())[0]
-                            })
+                for var in record[1]:
+                    key = list(var)[0]
+                    value = var[key]
+                    var_id_long = f'{station_id}_{key}'
+                    variable_id = self.db.get_variable_id(var_id_long)
+                    df = df.append({
+                        'sensor_id': sensor_id,
+                        'date': date,
+                        'time': time,
+                        'value': value,
+                        'variable_id': variable_id
+                    }, ignore_index=True)
+
+        return df
 
 
-        print(result)
 
 
 

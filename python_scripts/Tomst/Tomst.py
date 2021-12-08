@@ -1,11 +1,8 @@
 import pandas as pd
 from datetime import datetime
 from os import listdir, replace, path, mkdir
-import sys
 
-sys.path.append('/home/eds/Current/Amalie/python_scripts/Database')
-
-from Database import DataDB
+from python_scripts.Database.Database import DataDB
 
 class Tomst:
     def __init__(self, dir: str):
@@ -13,8 +10,8 @@ class Tomst:
         self.dir = dir
         self.path = ''
         self.current_file = ''
-        self.temp = pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'signal', 'variable_id'])
-        self.result = {'TEMPERATURE': pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'signal', 'variable_id']), 'SWP': pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'signal', 'variable_id'])}
+        self.temp = pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'variable_id'])
+        self.result = {'TEMPERATURE': pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'variable_id']), 'SWP': pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'variable_id'])}
 
     def get_data(self):
         for filename in listdir(self.dir):

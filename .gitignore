@@ -11,6 +11,12 @@ python_scripts/Ekotechnika/.env
 python_scripts/EmsBrno/.env
 python_scripts/Tomst/.env
 python_scripts/Vrty/.env
+python_scripts/Cleverfarm/__init__.py
+python_scripts/Database/__init__.py
+python_scripts/Ekotechnika/__init__.py
+python_scripts/EmsBrno/__init__.py
+python_scripts/Tomst/__init__.py
+python_scripts/Vrty/__init__.py
 python_scripts/Database/Backups
 python_scripts/Tomst/files_new
 python_scripts/Tomst/files_collected
