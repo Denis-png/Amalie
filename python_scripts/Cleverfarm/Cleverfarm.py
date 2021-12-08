@@ -2,11 +2,8 @@ import json
 import pandas as pd
 import requests
 from dotenv import dotenv_values, load_dotenv
-import sys
-
-sys.path.append('/home/eds/Current/Amalie/python_scripts/Database')
-
-from Database import DataDB
+from datetime import datetime
+from python_scripts.Database.Database import DataDB
 
 # Getting environment variables
 env = dotenv_values()
@@ -21,6 +18,7 @@ class CleverfarmAPI:
         self.data = {}
         # Database object init
         self.db = DataDB()
+        self.err = []
 
     # Method to get features - table names
     def get_features(self):
@@ -32,7 +30,7 @@ class CleverfarmAPI:
                         # Updating data dictionary with features as keys and empty dataframe as values
                         self.data.update({sensor['feature']: pd.DataFrame()})
             else:
-                print('CONNECTION ERROR: ', req.status_code)
+                self.err.append({'date':str(datetime.today().strftime("%Y-%m-%d %H:%M:%S")), 'company': 'Cleverfarm', 'message': f'Api connection error for {req}'})
         return self.data
 
     # Method for data frame creation from received data
@@ -41,28 +39,28 @@ class CleverfarmAPI:
             res = requests.get(req)
             if res.status_code == 200:
                 for sensor in res.json()['sensors']:
-                        df = pd.DataFrame(sensor['data'])  # Init dataframe from received data
+                    df = pd.DataFrame(sensor['data'])  # Init dataframe from received data
 
-                        sensor_name = res.json()['name']   # Sensor name for querying sensor_id
-                        sensor_id = self.db.get_sensor_id_by_name(sensor_name)  # Sensor_id
-                        df.insert(0, 'sensor_id', sensor_id)
+                    sensor_name = res.json()['name']   # Sensor name for querying sensor_id
+                    sensor_id = self.db.get_sensor_id_by_name(sensor_name)  # Sensor_id
+                    df.insert(0, 'sensor_id', sensor_id)
 
-                        df.insert(1, 'date', pd.to_datetime(df['time'].str.slice(start=0, stop=10)))  # Separating date to date column
-                        df['date'] = df['date'].dt.date
+                    df.insert(1, 'date', pd.to_datetime(df['time'].str.slice(start=0, stop=10)))  # Separating date to date column
+                    df['date'] = df['date'].dt.date
 
-                        df['time'] = pd.to_datetime(df['time'].str.slice(start=11, stop=19))  # Assigning time column to store only time
-                        df['time'] = df['time'].dt.time
+                    df['time'] = pd.to_datetime(df['time'].str.slice(start=11, stop=19))  # Assigning time column to store only time
+                    df['time'] = df['time'].dt.time
 
-                        df.insert(4, 'signal', res.json()['signal'])  # Column with signal property
-	
-                        variable_id = self.db.get_variable_id(sensor['feature'])  # Variable_id
-                        df.loc[:, 'variable_id'] = variable_id
+                    # df.insert(4, 'signal', res.json()['signal']) Column with signal property
 
-                        temp = [self.data[sensor['feature']], df]  # Temporary list containing collected data and new
-                        self.data[sensor['feature']] = pd.concat(temp)  # Concat on list to merge data together
+                    variable_id = self.db.get_variable_id(sensor['feature'])  # Variable_id
+                    df.loc[:, 'variable_id'] = variable_id
+
+                    temp = [self.data[sensor['feature']], df]  # Temporary list containing collected data and new
+                    self.data[sensor['feature']] = pd.concat(temp)  # Concat on list to merge data together
             else:
-                print('CONNECTION ERROR: ', req.status_code)
-        return self.data
+                self.err.append({'date':str(datetime.today().strftime("%Y-%m-%d %H:%M:%S")), 'company': 'Cleverfarm', 'message': f'Api connection error for {req}'})
+        return self.data, self.err
 
     def get_date_range(self):
         start_date = 0

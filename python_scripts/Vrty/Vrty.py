@@ -19,8 +19,12 @@ class Vrty:
         self.step = 30
         self.table = 'data_Vrty'
         self.err = []
+        self.count = 0
 
     def get_data(self, start_date=datetime(2021, 5, 24, 00, 00)):
+        self.count += 1
+        if self.count > 10:
+            return pd.DataFrame(), self.err
         for url in self.api:
             df = pd.DataFrame(columns=['sensor_id', 'date', 'time', 'value', 'variable_id'])
 
@@ -43,7 +47,9 @@ class Vrty:
                 if i == len(datetime_range)-1:
                     if df.size <= 0:
                         start_date += timedelta(days=1)
+                        start_date = start_date.replace(second=0)
                         print('Looking for data...')
+                        print(start_date)
                         df, errs = self.get_data(start_date)
                         self.err += errs
                         return df, self.err
