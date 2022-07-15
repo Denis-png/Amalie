@@ -1,0 +1,80 @@
+{%load static%}
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--BOOTSTRAP-->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="{% static 'js/bootstrap-datepicker.min.js' %}" type="text/javascript"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-treeview.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-select.css' %}" type="text/css">
+
+
+    <!--FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/3e9ec05d50.js" crossorigin="anonymous"></script>
+
+    <!-- FLATPICKER -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- CHART JS -->
+    <script src="{% static 'js/package/dist/chart.js' %}"></script>
+
+    <!--CUSTOM STYLES-->
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/parts.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sensors_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/breakpoints.css' %}">
+
+    {% block styles %}
+
+    {% endblock %}
+
+    <title>
+        {% block title %}
+            Amalie
+        {% endblock %}
+    </title>
+
+</head>
+<body>
+    <div class='layout'>
+
+
+        <!--HEADER-->
+        {% include 'parts/header.html' %}
+
+        <!--SIDEBAR-->
+        {% include 'parts/sidebar.html' %}
+
+        <!--CONTENT SECTION-->
+        <div class='section'>
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        {% block javascript %}
+        {% endblock %}
+
+       
+    </div>
+</body>
+</html>

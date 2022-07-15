@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+
+
+{% block styles %}
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    
+
+    <div class='dashboard-info'>
+
+        <div class="company-select">
+            <select id="company_select_id"
+                    class="selectpicker"
+                    data-live-search="true"
+                    name="company"
+                    title="Select company">
+                    {% for company in companies.keys %}
+                        <option value={{company|upper}}> {{ company|upper }} </option>
+                    {% endfor %}
+            </select>
+
+            <button id="log_modal_button" class='btn btn-primary m-auto' data-toggle="modal">Logs</button>
+        </div>
+        <div class='company-info' id='company_info'>
+
+        </div>
+
+            {% for company, logs in companies.items %}
+                <div class="modal fade" id="modal_window_{{company|upper}}" tabindex="-1" role="dialog" style='height:100vh;widht:100vw;'>
+                    <div class="modal-dialog  modal-dialog-centered modal-lg" role="document" style="height:80%; width:100vw;">
+                        <div class="modal-content" style="height:80%; width:100%;">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title"> {{company|upper}} </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body dashboard-modal" style="background-color:black;color:white;">
+                                <div style='height:100%;'>
+                                    {% for line in logs%}
+                                        {{line.date}} |<span style='color:{{line.type.1}}'>{{line.type.0}}</span>| {{line.msg}} |<span style='font-weight:bold;'>{{line.sensor}}</span>
+                                        <br>
+                                    {%endfor%}
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        
+        
+        
+
+
+    </div>
+
+    <div class='dashboard-charts' id="dashboard_charts">
+
+
+    </div>
+    
+    <script>
+        $('#company_select_id').on('change', function (e) {
+            e.preventDefault();
+            var data_for_backend = {};
+            data_for_backend.company = $('#company_select_id').val();
+     
+            var url = "{% url 'dashboard' %}"
+            
+            if (data_for_backend.company != ''){
+                
+                $.post(url, data_for_backend, function (response) {
+
+                    // Company info
+                    let dt_name = response['dt_name']
+                    let n_rows = response['n_rows']
+                    let chart_data = response['chart_data']
+
+                    let parent_box = document.getElementById('company_info')
+                    parent_box.innerHTML = "";
+
+                    $('#company_info').append('<p>' + 'Table name: ' + dt_name + '</p>')
+                    $('#company_info').append('<p>' + 'N rows: ' + n_rows + '</p>')
+
+                    let chart_box = document.getElementById('dashboard_charts')
+                    chart_box.innerHTML = "";
+                    $('#dashboard_charts').append('<canvas id="myChart" style="overflow-y: scroll;">' + '</canvas>')
+
+                    //CHART JS
+                    let canvas = document.getElementById('myChart')
+                    let ctx = canvas.getContext('2d');
+                    
+                    let dates = []
+
+                    response['chart_data']['data'].forEach(d => {
+                        dates.push(new Date(d))
+                    })
+
+                    const myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: response['chart_data']['labels'],
+                            datasets: [{
+                                label: 'Sensors health tracker',
+                                data: dates,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            
+                            indexAxis: 'y',
+                            scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day'
+                                    },
+                                    min: new Date(response['chart_data']['min_date']),
+                                }
+                            }
+
+                        },
+
+                    });
+                    
+                    
+
+                    
+
+                });
+            }
+            
+         });
+
+        $('#company_select_id').change(function (e) {
+            e.preventDefault();
+            $("#log_modal_button").attr("data-target","#modal_window_" + $(this).val());
+        });
+
+
+        
+    
+    </script>
+{% endblock %}
+

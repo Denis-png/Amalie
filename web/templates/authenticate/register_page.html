@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/components/auth_forms.css'%}">
+{% endblock %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+    <form action="." method="POST" class="auth-form">
+        {% csrf_token %}
+        <span class="auth-form__title">Sign up</span>
+
+        <input type="text" class="auth-form__inputs" name="first_name" placeholder="First name" value="{% if user %}{{ user.first_name }}{% endif %}">
+        <input type="text" class="auth-form__inputs" name="last_name" placeholder="Last name" value="{% if user %}{{ user.last_name }}{% endif %}">
+        <input type="email" class="auth-form__inputs" name="email" placeholder="Email" value="{% if user %}{{ user.email }}{% endif %}">
+        <input type="password" class="auth-form__inputs" name="password1" placeholder="Password">
+        <input type="password" class="auth-form__inputs" name="password2" placeholder="Confirm password">
+        <ul class="auth-form__errors">
+            {% if err %}
+                {% for error in err %}
+                    <li><i class="fas fa-exclamation-circle"></i> {{ error }}</li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+        <button type="submit" class="light-button m-auto">Register</button>
+    </form>
+{% endblock %}

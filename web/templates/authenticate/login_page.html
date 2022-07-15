@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Sign In
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/components/auth_forms.css'%}">
+{% endblock %}
+
+{% block content %}
+    <form action="." method="post" class="auth-form">
+        {% csrf_token %}
+
+        <span class="auth-form__title">Sign in</span>
+
+        <input type="email" class="auth-form__inputs" name="email" placeholder="Email...">
+        <input type="password" class="auth-form__inputs" name="password" placeholder="Password...">
+
+        <button type="submit" class="light-button m-auto">Log in</button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class='admin'>
+        <form action="/admin/update_actions/" method="post" class="admin-form">
+            {% csrf_token %}
+
+            <h1 class='fs-4 fw-bold mb-2'>Maintenance actions form</h1>
+        
+            <input class="form-control mb-2" type="text" name="to_add" placeholder="Type in an action to add...">
+            <button type="submit" class="btn btn-success">Add</button>
+            <div class="dropdown btn-group dropright">
+                <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Remove
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for action in actions %}
+                    <button class="dropdown-item" name="to_remove" value={{action.value}}>{{action.label}}</button>
+                    {%endfor%}
+                </div>
+            </div>
+
+        </form>
+        
+    </div>
+{% endblock %}

@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{%load static %}
+
+{% block content %}
+
+
+    <div class='sensor-info'>
+        <div id="sensor_selector" class='sensor-selector'>
+            <select id="sensor_selector_filter"
+                    class="selectpicker"
+                    data-live-search="true"
+                    name="sensor_id"
+                    title="Select sensor">
+                    {% for sensor in sensors %}
+                        <option name={{ sensor.sensor_name }} value={{sensor.id}}> {{ sensor.sensor_name }} </option>
+                    {% endfor %}
+            </select>
+        </div>
+        <div id='sensor_info_div' class="sensor-stats">
+
+        </div>
+        <div id='sensor_rec_div' class="sensor-records">
+
+        </div>
+
+
+    </div>
+
+    <div class='sensors-forms' name="forms_div">
+
+        {% comment %} Maintenance form {% endcomment %}
+        <form action="/sensors/maintenance" method="post" class='maintenance-form' id='maintenance-form-id'>
+            {%csrf_token%}
+          
+            <div class="form-group">
+                <select id="maintenance_users"
+                class="selectpicker"
+                name="maintenance_users"
+                title="Maintenance user">
+                    {% for user in users %}
+                        <option value={{user.id}}> {{ user.last_name }} {{ user.first_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+
+
+            <div class="form-group">
+                <select id="maintenance_actions"
+                        class="selectpicker"
+                        name="maintenance_actions"
+                        title="Maintenance action">
+                        {% for action in actions %}
+                            <option value={{action.value}}> {{ action.label }}</option>
+                        {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="maintenance_datetime" name="date_time" placeholder="Select date and time...">
+            </div>
+
+            
+            <div class="form-group">
+                <input class="form-control" name='maintenance_note' id="maintenance_note" placeholder="Enter your note...">
+            </div>
+
+            <button type="submit" class="btn btn-primary m-auto">Submit</button>
+        </form>
+
+
+
+        <form action="/sensors/condition" method="post" class='condition-form' id='condition-form-id'>
+            {%csrf_token%}
+
+            <div class="form-group">
+                <input class="form-control" id="condition_state" name='condition_state' placeholder="Enter sensors state..." required="true">
+            </div>
+
+            <div class="form-group">
+                <input class="condition-form__input" type="text" id="condition_date_start" name="start_date_time" value="" placeholder="Start date and time...">
+
+                <input class="condition-form__input" type="text" id="condition_date_end" name="end_date_time" value="" placeholder="End date and time...">
+            </div>
+
+            <div class="form-group">
+                <input class="form-control" id="condition_note" name='condition_note' placeholder="Enter your note...">
+            </div>
+
+            <button type="submit" class="btn btn-primary m-auto">Submit</button>
+        </form>
+    </div>
+
+
+    <!--INPUT VALIDATION-->
+    <button id="hidden_modal_alert_button" data-toggle="modal" data-target="#modal_alerts" hidden></button>
+    <div class="modal fade" id="modal_alerts" tabindex="-1" role="dialog">
+        <div class="modal-dialog  modal-dialog-centered modal-lg" role="document" style="max-width: 50%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Notification </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id='modal_alerts_text_field' style="white-space: pre"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+
+    flatpickr('#maintenance_datetime', {
+        enableTime: true,
+        time_24hr: true,
+        enableSeconds: true,
+    })
+
+    flatpickr('#condition_date_start', {
+        enableTime: true,
+        time_24hr: true,
+        enableSeconds: true,
+    })
+
+    flatpickr('#condition_date_end', {
+        enableTime: true,
+        time_24hr: true,
+        enableSeconds: true,
+    })
+
+    $('#sensor_selector_filter').change(function (e) {
+        e.preventDefault();
+        var data_for_backend = {};
+        var sensor_select = document.getElementById('sensor_selector_filter')
+
+        data_for_backend.chosen_sensor = $(this).children("option:selected").val();;
+
+        console.log(data_for_backend)
+
+        var url = "{% url 'get_sensor_info' %}"
+        $.post(url, data_for_backend, function (response) {
+
+            console.log(response)  // просто чтобы показать что оно пришло
+
+            $('#sensor_info_div').empty();
+
+            $('#sensor_info_div').append("<h1 class='fw-bold'>" + response['sensor_name'] +"</h1>")
+            $('#sensor_info_div').append("<h2 class='fw-bold'>" + "Serial number: " + response['serial'] +"</h2>")
+            $('#sensor_info_div').append("<p>" + "Variables: " + response['variables'] +"</p>")
+            $('#sensor_info_div').append("<p>" + "Latest record: " + response['latest_record'] +"</p>")
+
+            $('#sensor_rec_div').append("<p class='fw-bold mb-1'>" + 'Recorded maintenance:' +"</p>") 
+            $('#sensor_rec_div').append("<p>" + response['records'] +"</p>")
+
+         });
+         
+    });
+
+
+    $('#maintenance-form-id').on('submit', function (e) {
+        e.preventDefault();
+        var data_for_backend = {};
+        data_for_backend.sensor_id = $('#sensor_selector_filter').val();
+        data_for_backend.maintenance_user= $('#maintenance_users').val();
+        data_for_backend.maintenance_action = $('#maintenance_actions').val();
+        data_for_backend.maintenance_datetime = $('#maintenance_datetime').val();
+        data_for_backend.maintenance_note = $('#maintenance_note').val();
+        
+        console.log(data_for_backend)
+
+        var url = "{% url 'maintenance' %}"
+        
+        if (data_for_backend.sensor_id == '' || data_for_backend.maintenance_user == '' || data_for_backend.maintenance_action == '' || data_for_backend.maintenance_datetime == ''){
+            var alert_text = "One or several fields is incorrect. Fix it and try to submit again."
+            $("#modal_alerts_text_field").text(alert_text);
+            $("#hidden_modal_alert_button").trigger('click');
+        } else{
+            $.post(url, data_for_backend, function (response) {
+                $("#modal_alerts_text_field").text(response['msg']);
+                $("#hidden_modal_alert_button").trigger('click');
+            });
+        
+        }
+ 
+     });
+ 
+     $('#condition-form-id').on('submit', function (e) {
+        e.preventDefault();
+        var data_for_backend = {};
+        data_for_backend.sensor_id = $('#sensor_selector_filter').val();
+        data_for_backend.sensor_state = $('#condition_state').val();
+        data_for_backend.start_time = $('#condition_date_start').val();
+        data_for_backend.end_time = $('#condition_date_end').val();
+        data_for_backend.note = $('#condition_note').val();
+ 
+        var url = "{% url 'condition' %}"
+        console.log(data_for_backend);
+        if (data_for_backend.sensor_id == '' || data_for_backend.sensor_state == '' || data_for_backend.start_time == '' || data_for_backend.end_time == ''){
+            var alert_text = "One or several fields is incorrect. Fix it and try to submit again."
+            $("#modal_alerts_text_field").text(alert_text);
+            $("#hidden_modal_alert_button").trigger('click');
+        } else{
+            $.post(url, data_for_backend, function (response) {
+                $("#modal_alerts_text_field").text(response['msg']);
+                $("#hidden_modal_alert_button").trigger('click');
+            });
+            
+        }
+ 
+     });
+
+</script>
+{% endblock %}
