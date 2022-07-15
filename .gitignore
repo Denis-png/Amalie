@@ -3,7 +3,7 @@ web/amalie_remaster/staticfiles
 web/amalie_remaster/.env
 web/amalie_remaster/settings.py
 trashbin
-amalie_venv
+venv
 python/.env
 python/trash
 .idea

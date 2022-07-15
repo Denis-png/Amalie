@@ -1,7 +1,8 @@
 from Cleverfarm import CleverfarmAPI
 from Tomst import Tomst
-from Vrty import Vrty
+from Bluebeatle import BlueBeatle
 from Ekotechnika import Ekotechnika
+from SummaryStats import SumStats
 
 from termcolor import colored
 from datetime import datetime
@@ -9,6 +10,11 @@ from datetime import datetime
 import schedule
 import time
 import json
+
+# Summary stats 
+def sum_stats():
+    sum_stats = SumStats()
+    sum_stats.stats()
 
 
 # Get and insert Cleverfarm data
@@ -72,12 +78,12 @@ def tomst_run():
 
 
 # Get and insert Vrty data
-def vrty_run():
+def bluebeatle_run():
     global vrty_logs
-    vrty = Vrty()
-    logs = vrty.get_data()
+    bb = BlueBeatle()
+    logs = bb.get_data()
     
-    vrty_logs = []
+    bb_logs = []
 
     for name,log in logs.items():
         print(f'\033[1m---------------[{name}]---------------\033[0m')
@@ -92,7 +98,7 @@ def vrty_run():
             
             print(f'|{row["msg"]}| \033[1m[{name}]\033[0m')
 
-            vrty_logs.append(
+            bb_logs.append(
                         {"date": f"{date_time.date()} {datetime.strftime(date_time, '%H:%M:%S')}", 
                         "type":row["type"], 
                         "msg":row["msg"], 
@@ -143,13 +149,15 @@ def eddycov_run():
 if __name__ == '__main__':
  
 
-    schedule.every().day.at('00:00').do(cleverfarm_run)
+    schedule.every().hour.do(cleverfarm_run)
 
-    schedule.every().day.at('00:30').do(vrty_run)
+    schedule.every().hour.do(bluebeatle_run)
 
-    schedule.every().day.at('01:00').do(ekotechnika_run)
+    schedule.every().hour.do(ekotechnika_run)
 
-    schedule.every().day.at('01:30').do(tomst_run)
+    schedule.every().hour.do(tomst_run)
+
+    schedule.every().hour.do(sum_stats)
 
 
     while True:
@@ -165,7 +173,7 @@ if __name__ == '__main__':
 
         log_file = open('logs/daily.txt', 'w')
 
-        log_names = ['cleverfarm', 'vrty', 'ekotechnika', 'tomst']
+        log_names = ['cleverfarm', 'bluebeatle', 'ekotechnika', 'tomst']
 
         logs = {}
     

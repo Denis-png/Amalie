@@ -10,10 +10,10 @@ from termcolor import colored
 env = dotenv_values()
 
 
-class Vrty:
+class BlueBeatle:
     def __init__(self):
-        self.api = json.loads(env['VRTY'])
-        self.headers = {'Authorization': env['AUTH_VRTY']}
+        self.api = json.loads(env['BlueBeatle'])
+        self.headers = {'Authorization': env['AUTH_BlueBeatle']}
         self.db = Database()
 
         self.logs = {}
@@ -21,7 +21,7 @@ class Vrty:
 
     def get_latest_row(self, sensor, variable):
 
-        date_time = self.db.fetchall(f'SELECT date, time FROM global."data_Vrty" WHERE sensor_id={sensor} AND variable_id={variable} \
+        date_time = self.db.fetchall(f'SELECT date, time FROM global."data_BlueBeatle" WHERE sensor_id={sensor} AND variable_id={variable} \
                                         ORDER BY date DESC, time DESC LIMIT 1')
 
         return date_time[0]
@@ -67,22 +67,22 @@ class Vrty:
 
                                         if (datetime_last[0] is None) or ((date == datetime_last[0] and time > datetime_last[1]) or (date > datetime_last[0])):
 
-                                            self.db.execute('INSERT INTO global."data_Vrty" (sensor_id, date, time, value, variable_id) \
+                                            self.db.execute('INSERT INTO global."data_BlueBeatle" (sensor_id, date, time, value, variable_id) \
                                                 VALUES (%s, \'%s\', \'%s\', %s, %s)' % insert_row)
                                             self.logs[f'{serial}/{var[1]}'].append({'type': ('SUCCESS', 'green'), 'msg': f'Record inserted: {date} {time} - {value}'})
 
 
                                 except IndexError:
-                                    self.logs[f'Vrty/{serial}'] = []
-                                    self.logs[f'Vrty/{serial}'].append({'type': ('ERROR', 'red'), 'msg': f'Sensor with serial number {serial} is not in database.'})
+                                    self.logs[f'BlueBeatle/{serial}'] = []
+                                    self.logs[f'BlueBeatle/{serial}'].append({'type': ('ERROR', 'red'), 'msg': f'Sensor with serial number {serial} is not in database.'})
                                     continue         
 
                             break
                         else:
                             continue
                     else:
-                        self.logs[f'Vrty/{req}'] = []
-                        self.logs[f'Vrty/{req}'].append({'type': ('ERROR', 'red'), 'msg': f'No response from {req} ({start_date}/{end_date})'})
+                        self.logs[f'BlueBeatle/{req}'] = []
+                        self.logs[f'BlueBeatle/{req}'].append({'type': ('ERROR', 'red'), 'msg': f'No response from {req} ({start_date}/{end_date})'})
 
                 start_date = start_date + timedelta(minutes=30)
         return self.logs
