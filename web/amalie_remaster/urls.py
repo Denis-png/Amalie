@@ -20,5 +20,4 @@ from django.views.generic import TemplateView
 urlpatterns = [
     #path('auth/', include('users.urls'), name='users'),
     path('', include('dashboard.urls'), name='dashboard'),
-    path('api/', include('datastream.urls'), name='datastream'),
 ]

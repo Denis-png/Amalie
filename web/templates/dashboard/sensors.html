@@ -12,7 +12,7 @@
                     name="sensor_id"
                     title="Select sensor">
                     {% for sensor in sensors %}
-                        <option name={{ sensor.sensor_name }} value={{sensor.id}}> {{ sensor.sensor_name }} </option>
+                        <option name={{ sensor.name }} value={{sensor.id}}> {{ sensor.name }} </option>
                     {% endfor %}
             </select>
         </div>
@@ -123,15 +123,11 @@
     })
 
     flatpickr('#condition_date_start', {
-        enableTime: true,
-        time_24hr: true,
-        enableSeconds: true,
+
     })
 
     flatpickr('#condition_date_end', {
-        enableTime: true,
-        time_24hr: true,
-        enableSeconds: true,
+
     })
 
     $('#sensor_selector_filter').change(function (e) {
@@ -194,10 +190,10 @@
         e.preventDefault();
         var data_for_backend = {};
         data_for_backend.sensor_id = $('#sensor_selector_filter').val();
-        data_for_backend.sensor_state = $('#condition_state').val();
-        data_for_backend.start_time = $('#condition_date_start').val();
-        data_for_backend.end_time = $('#condition_date_end').val();
-        data_for_backend.note = $('#condition_note').val();
+        data_for_backend.condition_state = $('#condition_state').val();
+        data_for_backend.condition_date_start = $('#condition_date_start').val();
+        data_for_backend.condition_date_end = $('#condition_date_end').val();
+        data_for_backend.condition_note = $('#condition_note').val();
  
         var url = "{% url 'condition' %}"
         console.log(data_for_backend);
